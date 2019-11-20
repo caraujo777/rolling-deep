@@ -12,9 +12,6 @@ with open("republican_users.txt", "r") as f:
         rep = line.replace(" ", "").split(',')
 f.close()
 
-with open("parsed_parties.txt", "w+") as f:
-    json.dump("hallo", f)
-
 data=[]
 with open(file_path) as f:
     for line in f:
