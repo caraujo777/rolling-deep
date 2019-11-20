@@ -4,12 +4,12 @@ file_path = "political_tweets.ndjson"
 
 with open("democrat_users.txt", "r") as f:
     for line in f:
-        dem = line.replace(" ", "").split(',')
+        dem = line.replace(" ", "").split(',')
 f.close()
 
 with open("republican_users.txt", "r") as f:
     for line in f:
-        rep = line.replace(" ", "").split(',')
+        rep = line.replace(" ", "").split(',')
 f.close()
 
 data=[]
@@ -23,6 +23,7 @@ with open(file_path) as f:
         elif(user in rep):
             j_content['user']['party'] = 'republican'
             data.append(j_content)
+        print(len(data))
 
 with open("parsed_parties.txt","w+") as f:
     for d in data:
