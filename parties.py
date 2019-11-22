@@ -11,10 +11,8 @@ with open("input_data/republican_users.txt", "r") as f:
 f.close()
 
 data=[]
-i = 0
 with open("input_data/political_tweets.ndjson") as f:
     for line in f:
-        i = i + 1
         j_content = json.loads(line)
         user = (j_content['user']['screen_name'])
         if(user in dem):
