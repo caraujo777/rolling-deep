@@ -17,7 +17,7 @@ with open('parsed_parties.txt') as f:
         j_content = json.loads(line)
         for val in j_content['entities']['hashtags']:
             if(val['text'].casefold() in hashtags):
-                data.append(line)
+                data.append(j_content)
                 appended = True
                 print("hashtag")
                 print(val['text'].casefold())
@@ -27,7 +27,7 @@ with open('parsed_parties.txt') as f:
             text = j_content['full_text'].casefold()
             for word in words:
                 if(word in text):
-                    data.append(line)
+                    data.append(j_content)
                     print("text")
                     print(word)
                     print('\n')
@@ -35,6 +35,6 @@ with open('parsed_parties.txt') as f:
         
 with open("parsed_climate.txt","w+") as f:
     for d in data:
-        json.dump(json.JSONDecoder().decode(d), f)
+        json.dump(d, f)
         f.write('\n')
 f.close()
