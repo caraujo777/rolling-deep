@@ -11,13 +11,13 @@ f.close()
 print(words)
 
 data=[]
-with open('input_data/political_tweets.ndjson') as f:
+with open('parsed_parties.txt') as f:
     for line in f:
         appended = False
         j_content = json.loads(line)
         for val in j_content['entities']['hashtags']:
             if(val['text'].casefold() in hashtags):
-                data.append(j_content)
+                data.append(line)
                 appended = True
                 print("hashtag")
                 print(val['text'].casefold())
@@ -27,7 +27,7 @@ with open('input_data/political_tweets.ndjson') as f:
             text = j_content['full_text'].casefold()
             for word in words:
                 if(word in text):
-                    data.append(j_content)
+                    data.append(line)
                     print("text")
                     print(word)
                     print('\n')
@@ -35,5 +35,6 @@ with open('input_data/political_tweets.ndjson') as f:
         
 with open("parsed_climate.txt","w+") as f:
     for d in data:
-        json.dump(d, f)
+        json.dump(json.JSONDecoder().decode(d), f)
+        f.write('\n')
 f.close()
