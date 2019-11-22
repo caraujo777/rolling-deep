@@ -1,10 +1,6 @@
 # rolling-deep
 Deep Learning final project
 
-1. Go to https://cs.brown.edu/people/epavlick/join-us.html and click on "Tweets from politicians all over the world". to download the dataset
+- parties.py: Gets initial file with every single tweet ('political_tweets.njson') and filters only tweets by republicans and democrats, writes to 'parsed_parties.txt'. Computer might run out of memory, should be run on a Virtual Environment.
 
-2. Unzip the file in the project directory
-
-3. Run code using python preprocess.py
-
-4. A new file will be created with only republican and democract politicians ("parsed_parties.py")
+- climate.py: Uses 'keywords.txt' to create 2 lists: hashtags and key terms. Get as input a file with only tweets by republicans and democrats ('parsed_parties.txt') and writes these tweets to a new file ('parsed_climate.txt')
