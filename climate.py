@@ -5,7 +5,7 @@ import json
 with open("input_data/keywords.txt", "r") as f:
     for line in f:
         hashtags = set(line.replace(" ", "").split(','))
-        words = set(line.split(' ,'))
+        words = set(line.split(', '))
 f.close()
 
 print(words)
@@ -32,7 +32,7 @@ with open('parsed_parties.txt') as f:
                     print(word)
                     print('\n')
                     break
-        
+
 with open("parsed_climate.txt","w+") as f:
     for d in data:
         json.dump(d, f)
