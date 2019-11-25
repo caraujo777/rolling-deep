@@ -5,7 +5,7 @@ import json
 with open("input_data/keywords.txt", "r") as f:
     for line in f:
         hashtags = set(line.replace(" ", "").split(','))
-        words = set(line.split(','))
+        words = set(line.split(' ,'))
 f.close()
 
 print(words)
