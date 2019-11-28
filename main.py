@@ -4,7 +4,6 @@ import tensorflow as tf
 import numpy as np
 from preprocess import *
 from transformer_model import Transformer_Seq2Seq
-from rnn_model import RNN_Seq2Seq
 import sys
 
 
@@ -84,25 +83,16 @@ def test(model, test, padding_index):
 
 
 def main():
-    if len(sys.argv) != 2 or sys.argv[1] not in {"RNN", "TRANSFORMER"}:
-        print("USAGE: python assignment.py <Model Type>")
-        print("<Model Type>: [RNN/TRANSFORMER]")
-        exit()
-
     print("Running preprocessing...")
-    train_english, test_english, train_french, test_french, english_vocab, french_vocab, eng_padding_index = get_data(
-        'data/fls.txt', 'data/els.txt', 'data/flt.txt', 'data/elt.txt')
+    train, test, vocab, padding_index = get_data('data/fls.txt', 'data/els.txt', 'data/flt.txt', 'data/elt.txt')
     print("Preprocessing complete.")
 
-    model_args = (FRENCH_WINDOW_SIZE, len(french_vocab), ENGLISH_WINDOW_SIZE, len(english_vocab))
-    if sys.argv[1] == "RNN":
-        model = RNN_Seq2Seq(*model_args)
-    elif sys.argv[1] == "TRANSFORMER":
-        model = Transformer_Seq2Seq(*model_args)
+    model_args = (WINDOW_SIZE, len(vocab))
+    model = Transformer_Seq2Seq(*model_args)
 
     # Train and Test Model for 1 epoch.
-    train(model, train_french, train_english, eng_padding_index)
-    perplexity, acc = test(model, test_french, test_english, eng_padding_index)
+    train(model, train, padding_index)
+    perplexity, acc = test(model, test, padding_index)
     # Print out perplexity
     print("per", perplexity)
     print("acc", acc)
