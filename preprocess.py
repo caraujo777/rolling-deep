@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 import numpy as np
 
-##########DO NOT CHANGE#####################
+
 PAD_TOKEN = "*PAD*"
 STOP_TOKEN = "*STOP*"
 START_TOKEN = "*START*"
@@ -10,15 +10,13 @@ UNK_TOKEN = "*UNK*"
 WINDOW_SIZE = 14
 
 
-##########DO NOT CHANGE#####################
-
 def pad_corpus(text):
     """
-    arguments are lists of sentences. Returns [FRENCH-sents, ENGLISH-sents]. The
+    arguments are lists of sentences. Returns sents. The
     text is given an initial "*STOP*".  All sentences are padded with "*STOP*" at
     the end.
 
-    :param french: list of French sentences
+    :param text: list of sentences
     :return: list of padded sentences
     """
     padded_sentences = []
@@ -33,9 +31,7 @@ def pad_corpus(text):
 
 def build_vocab(sentences):
     """
-    DO NOT CHANGE
-
-  Builds vocab from list of sentences
+    Builds vocab from list of sentences
 
     :param sentences:  list of sentences, each a list of words
     :return: tuple of (dictionary: word --> unique index, pad_token_idx)
@@ -51,9 +47,7 @@ def build_vocab(sentences):
 
 def convert_to_id(vocab, sentences):
     """
-    DO NOT CHANGE
-
-  Convert sentences to indexed
+    Convert sentences to indexed
 
     :param vocab:  dictionary, word --> unique index
     :param sentences:  list of lists of words, each representing padded sentence
@@ -65,9 +59,7 @@ def convert_to_id(vocab, sentences):
 
 def read_data(file_name):
     """
-    DO NOT CHANGE
-
-  Load text data from file
+    Load text data from file
 
     :param file_name:  string, name of data file
     :return: list of sentences, each a list of words split on whitespace
@@ -83,21 +75,15 @@ def get_data(training_file, test_file):
     Use the helper functions in this file to read and parse training and test data, then pad the corpus.
     Then vectorize your train and test data based on your vocabulary dictionaries.
 
-    :param english_training_file: Path to the english training file.
-    :param french_test_file: Path to the french test file.
+    :param training_file: Path to the english training file.
+    :param test_file: Path to the french test file.
 
     :return: Tuple of train containing:
-    (2-d list or array with english training sentences in vectorized/id form [num_sentences x 15] ),
-    (2-d list or array with english test sentences in vectorized/id form [num_sentences x 15]),
-    (2-d list or array with french training sentences in vectorized/id form [num_sentences x 14]),
-    (2-d list or array with french test sentences in vectorized/id form [num_sentences x 14]),
-    english vocab (Dict containg word->index mapping),
-    french vocab (Dict containg word->index mapping),
+    (2-d list or array with training sentences in vectorized/id form [num_sentences x 15] ),
+    (2-d list or array with test sentences in vectorized/id form [num_sentences x 15]),
+    vocab (Dict containg word->index mapping),
     english padding ID (the ID used for *PAD* in the English vocab. This will be used for masking loss)
     """
-    # MAKE SURE YOU RETURN SOMETHING IN THIS PARTICULAR ORDER: train_english, test_english, train_french, test_french, english_vocab, french_vocab, eng_padding_index
-
-    # TODO:
 
     # 1) Read English and French Data for training and testing (see read_data)
     training_data = read_data(training_file)

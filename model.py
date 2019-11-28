@@ -8,13 +8,10 @@ import transformer_funcs as transformer
 
 class Transformer_Seq2Seq(tf.keras.Model):
     def __init__(self, vocab_size, window_size):
-        ######vvv DO NOT CHANGE vvv##################
         super(Transformer_Seq2Seq, self).__init__()
 
         self.vocab_size = vocab_size
         self.window_size = window_size
-
-        ######^^^ DO NOT CHANGE ^^^##################
 
         # 1) Define any hyperparameters
         # 2) Define embeddings, encoder, decoder, and feed forward layers
@@ -46,7 +43,6 @@ class Transformer_Seq2Seq(tf.keras.Model):
         :return prbs: The 3d probabilities as a tensor, [batch_size x window_size x english_vocab_size]
         """
 
-        # TODO:
         # 1) Add the positional embeddings to french sentence embeddings
         embedding = self.embedding_layer(input)
         pos_embedding = self.pos_encode.call(embedding)
@@ -61,8 +57,6 @@ class Transformer_Seq2Seq(tf.keras.Model):
 
     def accuracy_function(self, prbs, labels, mask):
         """
-        DO NOT CHANGE
-
         Computes the batch accuracy
 
         :param prbs:  float tensor, word prediction probabilities [batch_size x window_size x english_vocab_size]
@@ -70,7 +64,6 @@ class Transformer_Seq2Seq(tf.keras.Model):
         :param mask:  tensor that acts as a padding mask [batch_size x window_size]
         :return: scalar tensor of accuracy of the batch between 0 and 1
         """
-
         decoded_symbols = tf.argmax(input=prbs, axis=2)
         accuracy = tf.reduce_mean(tf.boolean_mask(tf.cast(tf.equal(decoded_symbols, labels), dtype=tf.float32), mask))
         return accuracy
@@ -84,9 +77,6 @@ class Transformer_Seq2Seq(tf.keras.Model):
         :param mask:  tensor that acts as a padding mask [batch_size x window_size]
         :return: the loss of the model as a tensor
         """
-
-        # Note: you can reuse this from rnn_model.
-
         loss = tf.keras.losses.sparse_categorical_crossentropy(labels, prbs)
         masked = tf.boolean_mask(loss, mask)
         return tf.reduce_mean(masked)

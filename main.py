@@ -12,20 +12,10 @@ def train(model, train, eng_padding_index):
     Runs through one epoch - all training examples.
 
     :param model: the initilized model to use for forward and backward pass
-    :param train_french: french train data (all data for training) of shape (num_sentences, 14)
-    :param train_english: english train data (all data for training) of shape (num_sentences, 15)
+    :param train: train data (all data for training) of shape (num_sentences, 14)
     :param eng_padding_index: the padding index, the id of *PAD* token. This integer is used to mask padding labels.
     :return: None
     """
-
-    # NOTE: For each training step, you should pass in the french sentences to be used by the encoder,
-    # and english sentences to be used by the decoder
-    # - The english sentences passed to the decoder have the last token in the window removed:
-    #	 [STOP CS147 is the best class. STOP *PAD*] --> [STOP CS147 is the best class. STOP]
-    #
-    # - When computing loss, the decoder labels should have the first word removed:
-    #	 [STOP CS147 is the best class. STOP] --> [CS147 is the best class. STOP]
-
     at = 0
     while at + model.batch_size < len(train):
         batch = train[at: at + model.batch_size]
@@ -34,7 +24,6 @@ def train(model, train, eng_padding_index):
         labels = batch[:, :-1]
         mask = [el != eng_padding_index for el in labels]
 
-        # edit: training
         with tf.GradientTape() as tape:
             logits = model.call(batch)
             loss = model.loss_function(logits, labels, mask)
@@ -54,7 +43,6 @@ def test(model, test, padding_index):
     :param eng_padding_index: the padding index, the id of *PAD* token. This integer is used to mask padding labels.
     :returns: perplexity of the test set, per symbol accuracy on test set
     """
-    # Note: Follow the same procedure as in train() to construct batches of data!
     num_batches = 0
     total_loss = 0
     correct_words = 0
@@ -84,6 +72,7 @@ def test(model, test, padding_index):
 
 def main():
     print("Running preprocessing...")
+    # TODO: get data from parsed_climate.txt into right list format
     train, test, vocab, padding_index = get_data('data/fls.txt', 'data/els.txt', 'data/flt.txt', 'data/elt.txt')
     print("Preprocessing complete.")
 
