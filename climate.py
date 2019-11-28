@@ -4,11 +4,18 @@ import json
 # in the future, we could have 2 separate txt files maybe
 with open("input_data/keywords.txt", "r") as f:
     for line in f:
-        hashtags = set(line.replace(" ", "").split(','))
-        words = set(line.split(', '))
+        hashtags = list(line.replace(" ", "").replace("\n","").split(','))
+        words = list(line.replace("\n","").split(', '))
 f.close()
 
-print(words)
+singular_len = len(hashtags)
+for i in range(singular_len):
+    hashtags.append(hashtags[i]+"s")
+    words.append(words[i]+"s")
+
+print("hashtags: ",hashtags, len(hashtags))
+print("\n")
+print("words: ",words, len(words))
 
 data=[]
 with open('parsed_parties.txt') as f:
