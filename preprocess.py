@@ -70,7 +70,7 @@ def read_data(file_name):
     return text
 
 
-def get_data(training_file, test_file):
+def get_data(all_file):
     """
     Use the helper functions in this file to read and parse training and test data, then pad the corpus.
     Then vectorize your train and test data based on your vocabulary dictionaries.
@@ -85,9 +85,15 @@ def get_data(training_file, test_file):
     english padding ID (the ID used for *PAD* in the English vocab. This will be used for masking loss)
     """
 
-    # 1) Read English and French Data for training and testing (see read_data)
-    training_data = read_data(training_file)
-    test_data = read_data(test_file)
+    # 1) Read data!
+    all_data = read_data(all_file)
+
+    # split into training and testing data!
+    percentage_training = 0.8
+    size_training = int(np.floor(percentage_training * len(all_data)))
+    size_testing = len(all_data) - size_training
+    training_data = all_data[:size_training]
+    test_data = all_data[size_training:]
 
     # 2) Pad training data (see pad_corpus)
     training_padded = pad_corpus(training_data)
@@ -95,13 +101,12 @@ def get_data(training_file, test_file):
     # 3) Pad testing data (see pad_corpus)
     test_padded = pad_corpus(test_data)
 
-    # 4) Build vocab for french (see build_vocab)
+    # 4) Build vocab
     vocab, padding_index = build_vocab(training_padded)
 
-    # 6) Convert training and testing english sentences to list of IDS (see convert_to_id)
+    # 6) Convert training and testing sentences to list of IDS (see convert_to_id)
     training_ids = convert_to_id(vocab, training_padded)
     test_ids = convert_to_id(vocab, test_padded)
 
-    # train_english, test_english, train_french, test_french, english_vocab, french_vocab, eng_padding_index
+    # train, test, vocab, padding_index
     return training_ids, test_ids, vocab, padding_index
-

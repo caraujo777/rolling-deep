@@ -3,7 +3,6 @@ import numpy as np
 import tensorflow as tf
 import numpy as np
 from preprocess import *
-from transformer_model import Transformer_Seq2Seq
 import sys
 
 
@@ -13,7 +12,7 @@ def train(model, train, eng_padding_index):
 
     :param model: the initilized model to use for forward and backward pass
     :param train: train data (all data for training) of shape (num_sentences, 14)
-    :param eng_padding_index: the padding index, the id of *PAD* token. This integer is used to mask padding labels.
+    :param padding_index: the padding index, the id of *PAD* token. This integer is used to mask padding labels.
     :return: None
     """
     at = 0
@@ -38,9 +37,8 @@ def test(model, test, padding_index):
     Runs through one epoch - all testing examples.
 
     :param model: the initilized model to use for forward and backward pass
-    :param test_french: french test data (all data for testing) of shape (num_sentences, 14)
-    :param test_english: english test data (all data for testing) of shape (num_sentences, 15)
-    :param eng_padding_index: the padding index, the id of *PAD* token. This integer is used to mask padding labels.
+    :param test:  test data (all data for testing)
+    :param padding_index: the padding index, the id of *PAD* token. This integer is used to mask padding labels.
     :returns: perplexity of the test set, per symbol accuracy on test set
     """
     num_batches = 0
@@ -73,7 +71,7 @@ def test(model, test, padding_index):
 def main():
     print("Running preprocessing...")
     # TODO: get data from parsed_climate.txt into right list format
-    train, test, vocab, padding_index = get_data('data/fls.txt', 'data/els.txt', 'data/flt.txt', 'data/elt.txt')
+    train, test, vocab, padding_index = get_data('parsed_climate.txt')
     print("Preprocessing complete.")
 
     model_args = (WINDOW_SIZE, len(vocab))
@@ -89,5 +87,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-

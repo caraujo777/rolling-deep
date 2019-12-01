@@ -1,6 +1,5 @@
 import numpy as np
 import tensorflow as tf
-import transformer_funcs as transformer
 
 
 # TODO: get sentence embeddings, maybe used SVD or something
@@ -80,4 +79,3 @@ class Transformer_Seq2Seq(tf.keras.Model):
         loss = tf.keras.losses.sparse_categorical_crossentropy(labels, prbs)
         masked = tf.boolean_mask(loss, mask)
         return tf.reduce_mean(masked)
-
