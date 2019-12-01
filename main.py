@@ -71,7 +71,7 @@ def test(model, test, padding_index):
 def main():
     print("Running preprocessing...")
     # TODO: get data from parsed_climate.txt into right list format
-    inputs, labels vocab, padding_index = get_data('parsed_climate_inputs.txt', 'parsed_climate_labels.txt')
+    inputs, labels_vocab, padding_index = get_data('parsed_climate_inputs.txt', 'parsed_climate_labels.txt')
     print("Preprocessing complete.")
 
     #split into training and testing data!

@@ -24,6 +24,7 @@ def pad_corpus(text):
     for line in text:
         padded = line[:WINDOW_SIZE]
         padded += [STOP_TOKEN] + [PAD_TOKEN] * (WINDOW_SIZE - len(padded)-1)
+        print(padded)
         padded_sentences.append(padded)
 
     return padded_sentences
@@ -103,7 +104,7 @@ def get_data(inputs, labels):
 
 
     # 6) Convert training and testing sentences to list of IDS (see convert_to_id)
-    ids = convert_to_id(vocab, training_padded)
+    ids = convert_to_id(vocab, padded)
 
     # train, test, vocab, padding_index
     return ids, vocab, padding_index
