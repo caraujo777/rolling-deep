@@ -18,13 +18,18 @@ print("\n")
 print("words: ",words, len(words))
 
 data=[]
+correct_labels=[]
+counter = 0
 with open('parsed_parties.txt') as f:
     for line in f:
+
         appended = False
         j_content = json.loads(line)
         for val in j_content['entities']['hashtags']:
             if(val['text'].casefold() in hashtags):
-                data.append(j_content)
+                counter+=1
+                data.append(j_content['full_text'])
+                correct_labels.append(j_content['user']['party'])
                 appended = True
                 print("hashtag")
                 print(val['text'].casefold())
@@ -34,14 +39,20 @@ with open('parsed_parties.txt') as f:
             text = j_content['full_text'].casefold()
             for word in words:
                 if(word in text):
-                    data.append(j_content)
+                    data.append(j_content['full_text'])
+                    correct_labels.append(j_content['user']['party'])
                     print("text")
                     print(word)
                     print('\n')
                     break
 
-with open("parsed_climate.txt","w+") as f:
+with open("parsed_climate_inputs.txt","w+") as file_inputs:
     for d in data:
-        json.dump(d, f)
-        f.write('\n')
-f.close()
+        json.dump(d, file_inputs)
+        file_inputs.write('\n')
+file_inputs.close()
+with open("parsed_climate_labels.txt","w+") as file_labels:
+    for l in correct_labels:
+        json.dump(l, file_labels)
+        file_labels.write('\n')
+file_labels.close()
