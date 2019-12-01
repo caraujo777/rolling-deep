@@ -5,9 +5,9 @@ import tensorflow as tf
 # TODO: get sentence embeddings, maybe used SVD or something
 # TODO: train model (transformer, or other) to predict label
 
-class Transformer_Seq2Seq(tf.keras.Model):
+class Model(tf.keras.Model):
     def __init__(self, vocab_size, window_size):
-        super(Transformer_Seq2Seq, self).__init__()
+        super(Model, self).__init__()
 
         self.vocab_size = vocab_size
         self.window_size = window_size
@@ -27,13 +27,13 @@ class Transformer_Seq2Seq(tf.keras.Model):
         self.embedding_layer = tf.keras.layers.Embedding(self.vocab_size, self.embedding_size,
                                                                 input_length=self.window_size)
         # Create positional encoder layers
-        self.pos_encode = transformer.Position_Encoding_Layer(self.window_size, self.embedding_size)
-
-        # Define encoder and decoder layers:
-        self.encoder = transformer.Transformer_Block(self.embedding_size, is_decoder=False, multi_headed=False)
-
-        # Define dense layer(s)
-        self.dense_layer = tf.keras.layers.Dense(self.vocab_size, activation="softmax")
+        # self.pos_encode = transformer.Position_Encoding_Layer(self.window_size, self.embedding_size)
+        #
+        # # Define encoder and decoder layers:
+        # self.encoder = transformer.Transformer_Block(self.embedding_size, is_decoder=False, multi_headed=False)
+        #
+        # # Define dense layer(s)
+        # self.dense_layer = tf.keras.layers.Dense(self.vocab_size, activation="softmax")
 
     @tf.function
     def call(self, input):
