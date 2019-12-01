@@ -23,8 +23,7 @@ def pad_corpus(text):
     sentence_lengths = []
     for line in text:
         padded = line[:WINDOW_SIZE]
-        padded += [STOP_TOKEN] + [PAD_TOKEN] * (WINDOW_SIZE - len(padded)-1)
-        print(padded)
+        padded += [STOP_TOKEN] + [PAD_TOKEN] * (WINDOW_SIZE - len(padded))
         padded_sentences.append(padded)
 
     return padded_sentences
