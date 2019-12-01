@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 import numpy as np
 from preprocess import *
+from model import Model
 import sys
 
 
@@ -71,7 +72,7 @@ def test(model, test, padding_index):
 def main():
     print("Running preprocessing...")
     # TODO: get data from parsed_climate.txt into right list format
-    inputs, labels, padding_index = get_data('parsed_climate_inputs.txt', 'parsed_climate_labels.txt')
+    inputs, labels, vocab, padding_index = get_data('parsed_climate_inputs.txt', 'parsed_climate_labels.txt')
     print("Preprocessing complete.")
 
     #split into training and testing data!
@@ -85,10 +86,13 @@ def main():
 
 
     model_args = (WINDOW_SIZE, len(vocab))
-    model = Transformer_Seq2Seq(*model_args)
+    model = Model(*model_args)
 
+    print("Model Initialized!")
     # Train and Test Model for 1 epoch.
-    train(model, train, padding_index)
+    train(model, training_data_inputs, padding_index)
+
+
     perplexity, acc = test(model, test, padding_index)
     # Print out perplexity
     print("per", perplexity)
