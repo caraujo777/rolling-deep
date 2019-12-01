@@ -7,7 +7,7 @@ PAD_TOKEN = "*PAD*"
 STOP_TOKEN = "*STOP*"
 START_TOKEN = "*START*"
 UNK_TOKEN = "*UNK*"
-WINDOW_SIZE = 14
+WINDOW_SIZE = 25
 
 
 def pad_corpus(text):
