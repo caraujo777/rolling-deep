@@ -54,7 +54,7 @@ class Model(tf.keras.Model):
 
         return out
 
-    def accuracy_function(self, prbs, labels, mask):
+    def accuracy_function(self, probabilities, labels, mask):
         """
         Computes the batch accuracy
 
@@ -63,9 +63,9 @@ class Model(tf.keras.Model):
         :param mask:  tensor that acts as a padding mask [batch_size x window_size]
         :return: scalar tensor of accuracy of the batch between 0 and 1
         """
-        decoded_symbols = tf.argmax(input=prbs, axis=2)
-        accuracy = tf.reduce_mean(tf.boolean_mask(tf.cast(tf.equal(decoded_symbols, labels), dtype=tf.float32), mask))
-        return accuracy
+        argmaxProbabilities = np.argmax(probabilities, axis=1)
+        comparison = (argmaxProbabilities == labels)
+        return np.mean(comparison)
 
     def loss_function(self, prbs, labels, mask):
         """

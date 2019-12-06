@@ -7,67 +7,71 @@ from model import Model
 import sys
 
 
-def train(model, train, eng_padding_index):
+def train(model, train_inputs, train_labels, padding_index):
     """
     Runs through one epoch - all training examples.
 
     :param model: the initilized model to use for forward and backward pass
-    :param train: train data (all data for training) of shape (num_sentences, 14)
+    :param train_inputs: the train inputs of shape (?)
+    :param train_labels: the labels of the politcal party for train inputs
     :param padding_index: the padding index, the id of *PAD* token. This integer is used to mask padding labels.
     :return: None
     """
-    at = 0
-    while at + model.batch_size < len(train):
-        batch = train[at: at + model.batch_size]
-        at += model.batch_size
+    i = 0
+    while (i < len(train_labels)):
+        start = i
+        i += model.batch_size
+        end = i
+        # for when it is not divisible by batch_size to not go out of bounds
+        if i >= len(train_labels):
+            break;
 
-        labels = batch[:, :-1]
-        mask = [el != eng_padding_index for el in labels]
+        # batch sized inputs and labels!
+        batch_inputs = train_inputs[start:end] # batch of tweets
+        batch_labels = train_labels[start:end] # batch of labels for the tweets
+
+        mask = None
+        #mask = [el != eng_padding_index for el in labels] # QUESTION: do we need mask???
 
         with tf.GradientTape() as tape:
-            logits = model.call(batch)
-            loss = model.loss_function(logits, labels, mask)
+            logits = model.call(batch_inputs)
+            loss = model.loss_function(logits, batch_labels, mask)
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
-    return
 
-
-def test(model, test, padding_index):
+def test(model, test_inputs, test_labels, padding_index):
     """
     Runs through one epoch - all testing examples.
 
     :param model: the initilized model to use for forward and backward pass
-    :param test:  test data (all data for testing)
+    :param test_inputs:  test data inputs (ie tweets)
+    :param test_labels:  test data labels (ie political party corresponding to tweets)
     :param padding_index: the padding index, the id of *PAD* token. This integer is used to mask padding labels.
-    :returns: perplexity of the test set, per symbol accuracy on test set
+    :returns: accuracy of test set
     """
+    i = 0
+    total_accuracy = 0
     num_batches = 0
-    total_loss = 0
-    correct_words = 0
-    non_padding_words = 0
-    at = 0
-    while at + model.batch_size < len(test):
-        batch = test[at: at + model.batch_size]
-        at += model.batch_size
-
-        labels = batch[:, :-1]
-        mask = [el != padding_index for el in labels]
-        # edit: training
-        logits = model.call(batch)
-        loss = model.loss_function(logits, labels, mask)
-
-        non_padding_word = np.sum(mask)
-        acc = model.accuracy_function(logits, labels, mask) * non_padding_word
-        non_padding_words += non_padding_word
-        correct_words += acc
-
-        total_loss += loss
+    while (i < len(test_inputs)): # can use either french or english - same size!
+        start = i
+        i += model.batch_size
+        end = i
+        # for when it is not divisible by batch_size to chop it off
+        if i >= len(test_inputs):
+            break;
         num_batches += 1
-    avg_loss = total_loss / num_batches
-    perplexity = tf.exp(avg_loss)
-    return tf.reduce_mean(perplexity), correct_words / non_padding_words
+        # split up by inputs and labels
+        batch_inputs = train_inputs[start:end] # batch of tweets
+        batch_labels = train_labels[start:end] # batch of labels for the tweets
 
+        mask = None
+        #mask = [el != eng_padding_index for el in labels] # QUESTION: do we need mask???
+
+        probabilities = model.call(test_inputs)
+        batch_accuracy = model.accuracy_function(probabilities, test_labels, mask)
+        total_accuracy += batch_accuracy
+    return total_accuracy / num_batches
 
 def main():
     print("Running preprocessing...")
@@ -90,10 +94,10 @@ def main():
 
     print("Model Initialized!")
     # Train and Test Model for 1 epoch.
-    train(model, training_data_inputs, padding_index)
+    train(model, training_data_inputs, training_data_labels, padding_index)
 
 
-    perplexity, acc = test(model, test, padding_index)
+    perplexity, acc = test(model, test_data_inputs, test_data_labels, padding_index)
     # Print out perplexity
     print("per", perplexity)
     print("acc", acc)
