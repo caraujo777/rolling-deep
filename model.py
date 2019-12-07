@@ -69,7 +69,7 @@ class Model(tf.keras.Model):
         comparison = (argmaxProbabilities == labels)
         return np.mean(comparison)
 
-    def loss_function(self, prbs, labels, mask):
+    def loss_function(self, prbs, labels):
         """
         Calculates the model cross-entropy loss after one forward pass
 
@@ -80,5 +80,5 @@ class Model(tf.keras.Model):
         """
         print("hi loss")
         loss = tf.keras.losses.sparse_categorical_crossentropy(labels, prbs)
-        masked = tf.boolean_mask(loss, mask)
-        return tf.reduce_mean(masked)
+        # find avg loss
+        return tf.reduce_mean(loss)
