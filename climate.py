@@ -19,7 +19,7 @@ print("words: ",words, len(words))
 data=[]
 correct_labels=[]
 counter = 0
-shorter_set =0 #
+# shorter_set =0 
 with open('parsed_parties.txt') as f:
     for line in f:
         # if shorter_set > 2000:
@@ -48,13 +48,14 @@ with open('parsed_parties.txt') as f:
                     print('\n')
                     break
 
-with open("parsed_climate_inputs_2.txt","w+") as file_inputs:
+with open("parsed_climate_inputs.txt","w+") as file_inputs:
     for d in data:
         text = str(json.dumps(d))
         if text[1:3] == "RT":
             continue
         text = re.sub(r'http\S+', '', text)
         text = re.sub(r'\\\S+', '', text)
+        text = re.sub(r'[^\w\s\"]','',text)
         file_inputs.write(text)
         file_inputs.write('\n')
 file_inputs.close()
