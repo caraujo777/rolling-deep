@@ -33,6 +33,7 @@ class Model(tf.keras.Model):
 
         # Define dense layer(s)
         # TODO: may not be supposed to use softmax on last one
+        self.flatten = tf.keras.layers.Flatten()
         self.dense_layer = tf.keras.layers.Dense(2, activation="softmax")
 
     @tf.function
@@ -51,8 +52,15 @@ class Model(tf.keras.Model):
         # 2) Pass the french sentence embeddings to the encoder
         encoded = self.encoder.call(pos_embedding)
 
+        print("encod", encoded)
+
+        flat = self.flatten(encoded)
+
+        print("flat", flat)
+
         # 3) Apply dense layer(s) to the decoder out to generate probabilities
-        out = self.dense_layer(encoded)
+        out = self.dense_layer(flat)
+        print("out1", out)
 
         return out
 
@@ -75,10 +83,8 @@ class Model(tf.keras.Model):
 
         :param prbs:  float tensor, word prediction probabilities [batch_size x window_size x english_vocab_size]
         :param labels:  integer tensor, word prediction labels [batch_size x window_size]
-        :param mask:  tensor that acts as a padding mask [batch_size x window_size]
         :return: the loss of the model as a tensor
         """
-        print("hi loss")
         loss = tf.keras.losses.sparse_categorical_crossentropy(labels, prbs)
         # find avg loss
         return tf.reduce_mean(loss)
