@@ -32,7 +32,6 @@ def train(model, train_inputs, train_labels, padding_index):
 
         with tf.GradientTape() as tape:
             logits = model.call(batch_inputs)
-            print("logits shape", logits.shape)
             loss = model.loss_function(logits, batch_labels)
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
