@@ -19,8 +19,12 @@ for i in range(singular_len):
 data=[]
 correct_labels=[]
 counter = 0
+# shorten = 0
 with open('parsed_parties.txt') as f:
     for line in f:
+        # if shorten > 2000:
+        #     break
+        # shorten += 1
         appended = False
         j_content = json.loads(line)
         for val in j_content['entities']['hashtags']:
@@ -52,7 +56,8 @@ with open("parsed_climate_inputs.txt","w+") as file_inputs:
         text = re.sub(r'http\S+', '', text)
         text = re.sub(r'www\S+', '', text)
         text = re.sub(r'\\\S+', '', text)
-        text = re.sub(r'[^\w\s\"]','',text)
+        text = re.sub(r'[^\w\s\"]',' ',text)
+        text = re.sub(r'\s+', ' ', text)
         file_inputs.write(text)
         file_inputs.write('\n')
 file_inputs.close()
