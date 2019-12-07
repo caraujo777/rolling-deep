@@ -106,4 +106,4 @@ def get_data(inputs, labels):
     ids = convert_to_id(vocab, padded)
 
     # train, test, vocab, padding_index
-    return ids, vocab, padding_index
+    return ids, label_data, vocab, padding_index
