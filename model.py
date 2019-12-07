@@ -23,8 +23,8 @@ class Model(tf.keras.Model):
 
 
         # Define english and french embedding layers:
-        self.embedding_layer = tf.keras.layers.Embedding(self.vocab_size, self.embedding_size,
-                                                                input_length=self.window_size)
+        print("model init",self.window_size, self.embedding_size, self.vocab_size)
+        self.embedding_layer = tf.keras.layers.Embedding(self.vocab_size, self.embedding_size)
         # Create positional encoder layers
         self.pos_encode = transformer.Position_Encoding_Layer(self.window_size, self.embedding_size)
 
@@ -44,6 +44,7 @@ class Model(tf.keras.Model):
 
         # 1) Add the positional embeddings to french sentence embeddings
         embedding = self.embedding_layer(input)
+        print("before pos_",embedding.shape)
         pos_embedding = self.pos_encode.call(embedding)
 
         # 2) Pass the french sentence embeddings to the encoder

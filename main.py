@@ -24,7 +24,7 @@ def train(model, train_inputs, train_labels, padding_index):
         end = i
         # for when it is not divisible by batch_size to not go out of bounds
         if i >= len(train_labels):
-            break;
+            break
 
         # batch sized inputs and labels!
         batch_inputs = train_inputs[start:end] # batch of tweets
@@ -58,7 +58,7 @@ def test(model, test_inputs, test_labels, padding_index):
         end = i
         # for when it is not divisible by batch_size to chop it off
         if i >= len(test_inputs):
-            break;
+            break
         num_batches += 1
         # split up by inputs and labels
         batch_inputs = train_inputs[start:end] # batch of tweets
@@ -88,7 +88,7 @@ def main():
     test_data_labels = labels[size_training:]
 
 
-    model_args = (WINDOW_SIZE, len(vocab))
+    model_args = (len(vocab), WINDOW_SIZE)
     model = Model(*model_args)
 
     print("Model Initialized!")
