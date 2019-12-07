@@ -7,7 +7,7 @@ PAD_TOKEN = "*PAD*"
 STOP_TOKEN = "*STOP*"
 START_TOKEN = "*START*"
 UNK_TOKEN = "*UNK*"
-WINDOW_SIZE = 14
+WINDOW_SIZE = 25
 
 
 def pad_corpus(text):
@@ -23,7 +23,7 @@ def pad_corpus(text):
     sentence_lengths = []
     for line in text:
         padded = line[:WINDOW_SIZE]
-        padded += [STOP_TOKEN] + [PAD_TOKEN] * (WINDOW_SIZE - len(padded) - 1)
+        padded += [STOP_TOKEN] + [PAD_TOKEN] * (WINDOW_SIZE - len(padded))
         padded_sentences.append(padded)
 
     return padded_sentences
@@ -37,9 +37,10 @@ def build_vocab(sentences):
     :return: tuple of (dictionary: word --> unique index, pad_token_idx)
   """
     tokens = []
-    for s in sentences: tokens.extend(s)
-    all_words = sorted(list(set([STOP_TOKEN, PAD_TOKEN, UNK_TOKEN] + tokens)))
+    for s in sentences:
+        tokens.extend(s)
 
+    all_words = sorted(list(set([STOP_TOKEN, PAD_TOKEN, UNK_TOKEN] + tokens)))
     vocab = {word: i for i, word in enumerate(all_words)}
 
     return vocab, vocab[PAD_TOKEN]
@@ -53,6 +54,7 @@ def convert_to_id(vocab, sentences):
     :param sentences:  list of lists of words, each representing padded sentence
     :return: numpy array of integers, with each row representing the word indeces in the corresponding sentences
   """
+    print("in convert!")
     return np.stack(
         [[vocab[word] if word in vocab else vocab[UNK_TOKEN] for word in sentence] for sentence in sentences])
 
@@ -70,7 +72,7 @@ def read_data(file_name):
     return text
 
 
-def get_data(training_file, test_file):
+def get_data(inputs, labels):
     """
     Use the helper functions in this file to read and parse training and test data, then pad the corpus.
     Then vectorize your train and test data based on your vocabulary dictionaries.
@@ -85,23 +87,23 @@ def get_data(training_file, test_file):
     english padding ID (the ID used for *PAD* in the English vocab. This will be used for masking loss)
     """
 
-    # 1) Read English and French Data for training and testing (see read_data)
-    training_data = read_data(training_file)
-    test_data = read_data(test_file)
+     # 1) Read data!
+    input_data = read_data(inputs)
+    label_data = read_data(labels)
+    print("all size", len(input_data))
 
     # 2) Pad training data (see pad_corpus)
-    training_padded = pad_corpus(training_data)
+    padded = pad_corpus(input_data)
 
-    # 3) Pad testing data (see pad_corpus)
-    test_padded = pad_corpus(test_data)
 
-    # 4) Build vocab for french (see build_vocab)
-    vocab, padding_index = build_vocab(training_padded)
+    # 4) Build vocab
+    vocab, padding_index = build_vocab(padded)
 
-    # 6) Convert training and testing english sentences to list of IDS (see convert_to_id)
-    training_ids = convert_to_id(vocab, training_padded)
-    test_ids = convert_to_id(vocab, test_padded)
+    print("sizes before convert", len(padded), len(vocab))
 
-    # train_english, test_english, train_french, test_french, english_vocab, french_vocab, eng_padding_index
-    return training_ids, test_ids, vocab, padding_index
 
+    # 6) Convert training and testing sentences to list of IDS (see convert_to_id)
+    ids = convert_to_id(vocab, padded)
+
+    # train, test, vocab, padding_index
+    return ids, vocab, padding_index

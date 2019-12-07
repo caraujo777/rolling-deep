@@ -2,13 +2,12 @@ import numpy as np
 import tensorflow as tf
 import transformer_funcs as transformer
 
-
 # TODO: get sentence embeddings, maybe used SVD or something
 # TODO: train model (transformer, or other) to predict label
 
-class Transformer_Seq2Seq(tf.keras.Model):
+class Model(tf.keras.Model):
     def __init__(self, vocab_size, window_size):
-        super(Transformer_Seq2Seq, self).__init__()
+        super(Model, self).__init__()
 
         self.vocab_size = vocab_size
         self.window_size = window_size
@@ -55,7 +54,7 @@ class Transformer_Seq2Seq(tf.keras.Model):
 
         return out
 
-    def accuracy_function(self, prbs, labels, mask):
+    def accuracy_function(self, probabilities, labels, mask):
         """
         Computes the batch accuracy
 
@@ -64,9 +63,9 @@ class Transformer_Seq2Seq(tf.keras.Model):
         :param mask:  tensor that acts as a padding mask [batch_size x window_size]
         :return: scalar tensor of accuracy of the batch between 0 and 1
         """
-        decoded_symbols = tf.argmax(input=prbs, axis=2)
-        accuracy = tf.reduce_mean(tf.boolean_mask(tf.cast(tf.equal(decoded_symbols, labels), dtype=tf.float32), mask))
-        return accuracy
+        argmaxProbabilities = np.argmax(probabilities, axis=1)
+        comparison = (argmaxProbabilities == labels)
+        return np.mean(comparison)
 
     def loss_function(self, prbs, labels, mask):
         """
@@ -80,4 +79,3 @@ class Transformer_Seq2Seq(tf.keras.Model):
         loss = tf.keras.losses.sparse_categorical_crossentropy(labels, prbs)
         masked = tf.boolean_mask(loss, mask)
         return tf.reduce_mean(masked)
-
