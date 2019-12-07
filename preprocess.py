@@ -72,13 +72,26 @@ def read_data(file_name):
     return text
 
 
+def read_label_data(file_name):
+    """
+    Load text data from file
+
+    :param file_name:  string, name of data file
+    :return: list of sentences, each a list of words split on whitespace
+  """
+    text = []
+    with open(file_name, 'rt', encoding='latin') as data_file:
+        for line in data_file: text.append(int(line))
+    return text
+
+
 def get_data(inputs, labels):
     """
     Use the helper functions in this file to read and parse training and test data, then pad the corpus.
     Then vectorize your train and test data based on your vocabulary dictionaries.
 
-    :param training_file: Path to the english training file.
-    :param test_file: Path to the french test file.
+    :param inputs: Path to the file with tweets
+    :param labels: Path to the file with labels
 
     :return: Tuple of train containing:
     (2-d list or array with training sentences in vectorized/id form [num_sentences x 15] ),
@@ -89,7 +102,7 @@ def get_data(inputs, labels):
 
      # 1) Read data!
     input_data = read_data(inputs)
-    label_data = read_data(labels)
+    label_data = read_label_data(labels)
     print("all size", len(input_data))
 
     # 2) Pad training data (see pad_corpus)

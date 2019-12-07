@@ -1,2 +1,5 @@
 .DS_Store
 *.ndjson
+parsed_climate_inputs.txt
+parsed_climate_labels.txt
+parsed_parties.txt

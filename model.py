@@ -38,9 +38,10 @@ class Model(tf.keras.Model):
     @tf.function
     def call(self, input):
         """
-        :param encoder_input: batched ids corresponding to french sentences
+        :param input: batched ids corresponding to french sentences
         :return prbs: The 3d probabilities as a tensor, [batch_size x window_size x english_vocab_size]
         """
+        print(input)
 
         # 1) Add the positional embeddings to french sentence embeddings
         embedding = self.embedding_layer(input)
