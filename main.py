@@ -29,9 +29,8 @@ def train(model, train_inputs, train_labels, padding_index):
         # batch sized inputs and labels!
         batch_inputs = train_inputs[start:end] # batch of tweets
         batch_labels = train_labels[start:end] # batch of labels for the tweets
-
-        mask = (batch_labels != eng_padding_index)
-		mask = tf.cast(mask, tf.float32)
+        mask = (batch_labels != padding_index)
+        mask = tf.cast(mask, tf.float32)
 
         with tf.GradientTape() as tape:
             logits = model.call(batch_inputs)
@@ -65,8 +64,8 @@ def test(model, test_inputs, test_labels, padding_index):
         batch_inputs = train_inputs[start:end] # batch of tweets
         batch_labels = train_labels[start:end] # batch of labels for the tweets
 
-        mask = (batch_labels != eng_padding_index)
-		mask = tf.cast(mask, tf.float32)
+        mask = (batch_labels != padding_index)
+        mask = tf.cast(mask, tf.float32)
 
         probabilities = model.call(test_inputs)
         batch_accuracy = model.accuracy_function(probabilities, test_labels, mask)
