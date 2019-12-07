@@ -24,13 +24,13 @@ def train(model, train_inputs, train_labels, padding_index):
         end = i
         # for when it is not divisible by batch_size to not go out of bounds
         if i >= len(train_labels):
-            break;
+            break
 
         # batch sized inputs and labels!
         batch_inputs = train_inputs[start:end] # batch of tweets
         batch_labels = train_labels[start:end] # batch of labels for the tweets
-        mask = (batch_labels != padding_index)
-        mask = tf.cast(mask, tf.float32)
+
+        mask = [el != padding_index for el in batch_inputs]
 
         with tf.GradientTape() as tape:
             logits = model.call(batch_inputs)
@@ -58,7 +58,7 @@ def test(model, test_inputs, test_labels, padding_index):
         end = i
         # for when it is not divisible by batch_size to chop it off
         if i >= len(test_inputs):
-            break;
+            break
         num_batches += 1
         # split up by inputs and labels
         batch_inputs = train_inputs[start:end] # batch of tweets
@@ -81,18 +81,18 @@ def main():
     #split into training and testing data!
     percentage_training = 0.8
     size_training = int(np.floor(percentage_training * len(inputs)))
-    size_testing = len(inputs) - size_training
+
     training_data_inputs = inputs[:size_training]
     training_data_labels = labels[:size_training]
     test_data_inputs = inputs[size_training:]
     test_data_labels = labels[size_training:]
 
-
-    model_args = (WINDOW_SIZE, len(vocab))
+    model_args = (len(vocab), WINDOW_SIZE)
     model = Model(*model_args)
 
     print("Model Initialized!")
     # Train and Test Model for 1 epoch.
+    print(training_data_inputs, training_data_labels)
     train(model, training_data_inputs, training_data_labels, padding_index)
 
 

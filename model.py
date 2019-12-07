@@ -23,8 +23,8 @@ class Model(tf.keras.Model):
 
 
         # Define english and french embedding layers:
-        self.embedding_layer = tf.keras.layers.Embedding(self.vocab_size, self.embedding_size,
-                                                                input_length=self.window_size)
+        print("model init",self.window_size, self.embedding_size, self.vocab_size)
+        self.embedding_layer = tf.keras.layers.Embedding(self.vocab_size, self.embedding_size)
         # Create positional encoder layers
         self.pos_encode = transformer.Position_Encoding_Layer(self.window_size, self.embedding_size)
 
@@ -38,12 +38,14 @@ class Model(tf.keras.Model):
     @tf.function
     def call(self, input):
         """
-        :param encoder_input: batched ids corresponding to french sentences
+        :param input: batched ids corresponding to french sentences
         :return prbs: The 3d probabilities as a tensor, [batch_size x window_size x english_vocab_size]
         """
+        print(input)
 
         # 1) Add the positional embeddings to french sentence embeddings
         embedding = self.embedding_layer(input)
+        print("before pos_",embedding.shape)
         pos_embedding = self.pos_encode.call(embedding)
 
         # 2) Pass the french sentence embeddings to the encoder
