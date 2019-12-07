@@ -77,6 +77,7 @@ class Model(tf.keras.Model):
         :param mask:  tensor that acts as a padding mask [batch_size x window_size]
         :return: the loss of the model as a tensor
         """
+        print("hi loss")
         loss = tf.keras.losses.sparse_categorical_crossentropy(labels, prbs)
         masked = tf.boolean_mask(loss, mask)
         return tf.reduce_mean(masked)

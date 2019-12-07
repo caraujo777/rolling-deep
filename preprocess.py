@@ -22,10 +22,10 @@ def pad_corpus(text):
     padded_sentences = []
     sentence_lengths = []
     for line in text:
-        padded = line[:WINDOW_SIZE]
-        padded += [STOP_TOKEN] + [PAD_TOKEN] * (WINDOW_SIZE - len(padded))
+        padded = line[:WINDOW_SIZE-1]
+        padded += [STOP_TOKEN] + [PAD_TOKEN] * (WINDOW_SIZE - len(padded)-1)
+        print("length of padded sentence", len(padded))
         padded_sentences.append(padded)
-
     return padded_sentences
 
 
