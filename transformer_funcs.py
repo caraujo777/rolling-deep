@@ -202,6 +202,7 @@ class Transformer_Block(tf.keras.layers.Layer):
 class Position_Encoding_Layer(tf.keras.layers.Layer):
     def __init__(self, window_sz, emb_sz):
         super(Position_Encoding_Layer, self).__init__()
+        print(window_sz, emb_sz)
         self.positional_embeddings = self.add_weight("pos_embed", shape=[window_sz, emb_sz])
 
     @tf.function
@@ -212,5 +213,6 @@ class Position_Encoding_Layer(tf.keras.layers.Layer):
         :param x: [BATCH_SIZE x (ENG/FRN)_WINDOW_SIZE x EMBEDDING_SIZE ] the input embeddings fed to the encoder
         :return: [BATCH_SIZE x (ENG/FRN)_WINDOW_SIZE x EMBEDDING_SIZE ] new word embeddings with added positional encodings
         """
+        print("hi",x.shape, self.positional_embeddings.shape)
         return x + self.positional_embeddings
 

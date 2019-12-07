@@ -18,12 +18,12 @@ with open("input_data/political_tweets.ndjson") as f:
         j_content = json.loads(line)
         user = (j_content['user']['screen_name'])
         if(user in dem):
-            j_content['user']['party'] = 'democratic'
+            j_content['user']['party'] = 1
             data.append(j_content)
         elif(user in rep):
-            j_content['user']['party'] = 'republican'
+            j_content['user']['party'] = 0
             data.append(j_content)
-        
+
 
 with open("parsed_parties.txt","w+") as f:
     for d in data:
