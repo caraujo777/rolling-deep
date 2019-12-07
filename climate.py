@@ -1,7 +1,6 @@
 import json
+import re
 
-# for now, the hashtags and words lists are the same, one with no spaces and one with spaces
-# in the future, we could have 2 separate txt files maybe
 with open("input_data/keywords.txt", "r") as f:
     for line in f:
         hashtags = list(line.replace(" ", "").replace("\n","").split(','))
@@ -20,9 +19,12 @@ print("words: ",words, len(words))
 data=[]
 correct_labels=[]
 counter = 0
+shorter_set =0 #
 with open('parsed_parties.txt') as f:
     for line in f:
-
+        # if shorter_set > 2000:
+        #     break
+        # shorter_set += 1
         appended = False
         j_content = json.loads(line)
         for val in j_content['entities']['hashtags']:
@@ -46,9 +48,14 @@ with open('parsed_parties.txt') as f:
                     print('\n')
                     break
 
-with open("parsed_climate_inputs.txt","w+") as file_inputs:
+with open("parsed_climate_inputs_2.txt","w+") as file_inputs:
     for d in data:
-        json.dump(d, file_inputs)
+        text = str(json.dumps(d))
+        if text[1:3] == "RT":
+            continue
+        text = re.sub(r'http\S+', '', text)
+        text = re.sub(r'\\\S+', '', text)
+        file_inputs.write(text)
         file_inputs.write('\n')
 file_inputs.close()
 with open("parsed_climate_labels.txt","w+") as file_labels:
