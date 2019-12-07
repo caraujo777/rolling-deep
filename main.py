@@ -30,11 +30,9 @@ def train(model, train_inputs, train_labels, padding_index):
         batch_inputs = train_inputs[start:end] # batch of tweets
         batch_labels = train_labels[start:end] # batch of labels for the tweets
 
-        mask = [el != padding_index for el in batch_inputs]
-
         with tf.GradientTape() as tape:
             logits = model.call(batch_inputs)
-            loss = model.loss_function(logits, batch_labels, mask)
+            loss = model.loss_function(logits, batch_labels)
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
@@ -92,7 +90,6 @@ def main():
 
     print("Model Initialized!")
     # Train and Test Model for 1 epoch.
-    print(training_data_inputs, training_data_labels)
     train(model, training_data_inputs, training_data_labels, padding_index)
 
 
