@@ -22,7 +22,6 @@ class Transformer_Seq2Seq(tf.keras.Model):
 
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
 
-        # TODO: idk if we actually need all these layers, this code is modified off homework 4
 
         # Define english and french embedding layers:
         self.embedding_layer = tf.keras.layers.Embedding(self.vocab_size, self.embedding_size,
@@ -34,7 +33,8 @@ class Transformer_Seq2Seq(tf.keras.Model):
         self.encoder = transformer.Transformer_Block(self.embedding_size, is_decoder=False, multi_headed=False)
 
         # Define dense layer(s)
-        self.dense_layer = tf.keras.layers.Dense(self.vocab_size, activation="softmax")
+        # TODO: may not be supposed to use softmax on last one
+        self.dense_layer = tf.keras.layers.Dense(2, activation="softmax")
 
     @tf.function
     def call(self, input):

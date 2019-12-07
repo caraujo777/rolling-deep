@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 import numpy as np
 from preprocess import *
-from transformer_model import Transformer_Seq2Seq
+from model import Transformer_Seq2Seq
 import sys
 
 
