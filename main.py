@@ -32,6 +32,7 @@ def train(model, train_inputs, train_labels, padding_index):
 
         with tf.GradientTape() as tape:
             logits = model.call(batch_inputs)
+            print("logits shape", logits.shape)
             loss = model.loss_function(logits, batch_labels)
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
@@ -59,14 +60,11 @@ def test(model, test_inputs, test_labels, padding_index):
             break
         num_batches += 1
         # split up by inputs and labels
-        batch_inputs = test_inputs[start:end] # batch of tweets
-        batch_labels = test_labels[start:end] # batch of labels for the tweets
-
-        mask = (batch_labels != padding_index)
-        mask = tf.cast(mask, tf.float32)
+        batch_inputs = train_inputs[start:end] # batch of tweets
+        batch_labels = train_labels[start:end] # batch of labels for the tweets
 
         probabilities = model.call(test_inputs)
-        batch_accuracy = model.accuracy_function(probabilities, test_labels, mask)
+        batch_accuracy = model.accuracy_function(probabilities, test_labels)
         total_accuracy += batch_accuracy
     return total_accuracy / num_batches
 
