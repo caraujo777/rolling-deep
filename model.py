@@ -38,9 +38,10 @@ class Model(tf.keras.Model):
     @tf.function
     def call(self, input):
         """
-        :param encoder_input: batched ids corresponding to french sentences
+        :param input: batched ids corresponding to french sentences
         :return prbs: The 3d probabilities as a tensor, [batch_size x window_size x english_vocab_size]
         """
+        print(input)
 
         # 1) Add the positional embeddings to french sentence embeddings
         embedding = self.embedding_layer(input)
@@ -77,6 +78,7 @@ class Model(tf.keras.Model):
         :param mask:  tensor that acts as a padding mask [batch_size x window_size]
         :return: the loss of the model as a tensor
         """
+        print("hi loss")
         loss = tf.keras.losses.sparse_categorical_crossentropy(labels, prbs)
         masked = tf.boolean_mask(loss, mask)
         return tf.reduce_mean(masked)
