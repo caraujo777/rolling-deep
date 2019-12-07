@@ -59,8 +59,8 @@ def test(model, test_inputs, test_labels, padding_index):
             break
         num_batches += 1
         # split up by inputs and labels
-        batch_inputs = train_inputs[start:end] # batch of tweets
-        batch_labels = train_labels[start:end] # batch of labels for the tweets
+        batch_inputs = test_inputs[start:end] # batch of tweets
+        batch_labels = test_labels[start:end] # batch of labels for the tweets
 
         probabilities = model.call(test_inputs)
         batch_accuracy = model.accuracy_function(probabilities, test_labels)
