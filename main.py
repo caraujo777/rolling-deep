@@ -90,13 +90,13 @@ def main():
 
     print("Model Initialized!")
     # Train and Test Model for 1 epoch.
-    num_epochs = 10
+    num_epochs = 3
     for i in range(num_epochs):
         train(model, training_data_inputs, training_data_labels, padding_index)
 
-    acc = test(model, test_data_inputs, test_data_labels, padding_index, vocab)
-    # Print out perplexity
-    print("acc", acc)
+        acc = test(model, test_data_inputs, test_data_labels, padding_index, vocab)
+        # Print out perplexity
+        print("at epoch", i, "acc", acc)
 
 
 if __name__ == '__main__':
