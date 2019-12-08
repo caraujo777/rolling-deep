@@ -64,7 +64,7 @@ class Model(tf.keras.Model):
 
         return out
 
-    def accuracy_function(self, probabilities, labels, mask):
+    def accuracy_function(self, probabilities, labels):
         """
         Computes the batch accuracy
 
