@@ -75,6 +75,7 @@ class Model(tf.keras.Model):
         """
         argmaxProbabilities = np.argmax(probabilities, axis=1)
 
+        list_tweets = []
         # code to print out highly polarized tweets!
         for i in range(len(probabilities)):
             index = argmaxProbabilities[i]
@@ -84,12 +85,13 @@ class Model(tf.keras.Model):
                 for val in batch_inputs[i]:
                     word = list(vocab.keys())[val]
                     tweet += word + " "
-                print("Highly polarized tweet: ", tweet)
-                print("Prediction: ", index)
-                print("Correct label: ", labels[i])
+                # print("Highly polarized tweet: ", tweet)
+                # print("Prediction: ", index)
+                # print("Correct label: ", labels[i])
+                list_tweets.append((tweet, index, labels[i]))
 
         comparison = (argmaxProbabilities == labels)
-        return np.mean(comparison)
+        return np.mean(comparison), list_tweets
 
     def loss_function(self, prbs, labels):
         """
