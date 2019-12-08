@@ -37,7 +37,7 @@ def train(model, train_inputs, train_labels, padding_index):
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
 
-def test(model, test_inputs, test_labels, padding_index):
+def test(model, test_inputs, test_labels, padding_index, vocab):
     """
     Runs through one epoch - all testing examples.
 
@@ -61,9 +61,8 @@ def test(model, test_inputs, test_labels, padding_index):
         # split up by inputs and labels
         batch_inputs = test_inputs[start:end] # batch of tweets
         batch_labels = test_labels[start:end] # batch of labels for the tweets
-
         probabilities = model.call(batch_inputs)
-        batch_accuracy = model.accuracy_function(probabilities, batch_labels)
+        batch_accuracy = model.accuracy_function(probabilities, batch_labels, vocab, batch_inputs)
         total_accuracy += batch_accuracy
     return total_accuracy / num_batches
 
@@ -72,6 +71,10 @@ def main():
     # TODO: get data from parsed_climate.txt into right list format
     inputs, labels, vocab, padding_index = get_data('parsed_climate_inputs.txt', 'parsed_climate_labels.txt')
     print("Preprocessing complete.")
+
+
+    print("VOCAB", vocab)
+    print("osdijfhkg", list(vocab.keys())[23196])
 
     #split into training and testing data!
     percentage_training = 0.8
@@ -91,7 +94,7 @@ def main():
     for i in range(num_epochs):
         train(model, training_data_inputs, training_data_labels, padding_index)
 
-    acc = test(model, test_data_inputs, test_data_labels, padding_index)
+    acc = test(model, test_data_inputs, test_data_labels, padding_index, vocab)
     # Print out perplexity
     print("acc", acc)
 
