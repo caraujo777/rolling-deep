@@ -32,7 +32,6 @@ def train(model, train_inputs, train_labels, padding_index):
 
         with tf.GradientTape() as tape:
             logits = model.call(batch_inputs)
-            print("logits shape", logits.shape)
             loss = model.loss_function(logits, batch_labels)
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
@@ -63,8 +62,10 @@ def test(model, test_inputs, test_labels, padding_index):
         batch_inputs = test_inputs[start:end] # batch of tweets
         batch_labels = test_labels[start:end] # batch of labels for the tweets
 
-        probabilities = model.call(test_inputs)
-        batch_accuracy = model.accuracy_function(probabilities, test_labels)
+        probabilities = model.call(batch_inputs)
+        batch_accuracy = model.accuracy_function(probabilities, batch_labels)
+        if(batch_accuracy > 0.75):
+            print(probabilities, batch_labels)
         total_accuracy += batch_accuracy
     return total_accuracy / num_batches
 
@@ -88,12 +89,12 @@ def main():
 
     print("Model Initialized!")
     # Train and Test Model for 1 epoch.
-    train(model, training_data_inputs, training_data_labels, padding_index)
+    num_epochs = 10
+    for i in range(num_epochs):
+        train(model, training_data_inputs, training_data_labels, padding_index)
 
-
-    perplexity, acc = test(model, test_data_inputs, test_data_labels, padding_index)
+    acc = test(model, test_data_inputs, test_data_labels, padding_index)
     # Print out perplexity
-    print("per", perplexity)
     print("acc", acc)
 
 
