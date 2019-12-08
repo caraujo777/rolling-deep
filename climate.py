@@ -20,6 +20,8 @@ data=[]
 correct_labels=[]
 counter = 0
 # shorten = 0
+dem = 0
+rep = 0
 with open('parsed_parties.txt') as f:
     for line in f:
         # if shorten > 2000:
@@ -27,8 +29,17 @@ with open('parsed_parties.txt') as f:
         # shorten += 1
         appended = False
         j_content = json.loads(line)
+        # print("party", j_content['user']['party'])
         for val in j_content['entities']['hashtags']:
             if(val['text'].casefold() in hashtags):
+
+                if j_content['user']['party'] == 0:
+                    # print("should be rep", j_content['user']['party'])
+                    rep += 1
+                if j_content['user']['party'] == 1:
+                    # print("should be democratic", j_content['user']['party'])
+                    dem += 1
+
                 counter+=1
                 data.append(j_content['full_text'])
                 correct_labels.append(j_content['user']['party'])
@@ -39,14 +50,27 @@ with open('parsed_parties.txt') as f:
                 break
         if not appended:
             text = j_content['full_text'].casefold()
+            text = re.sub(r'http\S+', '', text)
+            text = re.sub(r'www\S+', '', text)
+            text = re.sub(r'\\\S+', '', text)
+            text = re.sub(r'[^\w\s]',' ',text)
+            text = re.sub(r'\s+', ' ', text)
             for word in words:
                 if(word in text):
+                    if j_content['user']['party'] == 0:
+                        # print("should be rep", j_content['user']['party'])
+                        rep += 1
+                    if j_content['user']['party'] == 1:
+                        # print("should be democratic", j_content['user']['party'])
+                        dem += 1
                     data.append(j_content['full_text'])
                     correct_labels.append(j_content['user']['party'])
                     # print("text")
                     # print(word)
                     # print('\n')
                     break
+
+print("rep, dem",rep, dem)
 
 with open("parsed_climate_inputs.txt","w+") as file_inputs:
     for d in data:
@@ -56,8 +80,10 @@ with open("parsed_climate_inputs.txt","w+") as file_inputs:
         text = re.sub(r'http\S+', '', text)
         text = re.sub(r'www\S+', '', text)
         text = re.sub(r'\\\S+', '', text)
-        text = re.sub(r'[^\w\s\"]',' ',text)
+        text = re.sub(r'[^\w\s]',' ',text)
         text = re.sub(r'\s+', ' ', text)
+        text = text.casefold()
+        # print(text)
         file_inputs.write(text)
         file_inputs.write('\n')
 file_inputs.close()
