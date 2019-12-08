@@ -65,7 +65,10 @@ def test(model, test_inputs, test_labels, padding_index):
         probabilities = model.call(batch_inputs)
         batch_accuracy = model.accuracy_function(probabilities, batch_labels)
         if(batch_accuracy > 0.75):
-            print(probabilities, batch_labels)
+            for val in test_inputs[start:end]:
+                for i in val:
+                    print(vocab[i])
+                print('\n')
         total_accuracy += batch_accuracy
     return total_accuracy / num_batches
 
