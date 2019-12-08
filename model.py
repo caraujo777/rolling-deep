@@ -42,25 +42,19 @@ class Model(tf.keras.Model):
         :param input: batched ids corresponding to french sentences
         :return prbs: The 3d probabilities as a tensor, [batch_size x window_size x english_vocab_size]
         """
-        print(input)
 
         # 1) Add the positional embeddings to french sentence embeddings
         embedding = self.embedding_layer(input)
-        print("before pos_",embedding.shape)
+
         pos_embedding = self.pos_encode.call(embedding)
 
         # 2) Pass the french sentence embeddings to the encoder
         encoded = self.encoder.call(pos_embedding)
 
-        print("encod", encoded)
-
         flat = self.flatten(encoded)
-
-        print("flat", flat)
 
         # 3) Apply dense layer(s) to the decoder out to generate probabilities
         out = self.dense_layer(flat)
-        print("out1", out)
 
         return out
 
@@ -75,6 +69,7 @@ class Model(tf.keras.Model):
         """
         argmaxProbabilities = np.argmax(probabilities, axis=1)
 
+        list_tweets = []
         # code to print out highly polarized tweets!
         for i in range(len(probabilities)):
             index = argmaxProbabilities[i]
@@ -84,21 +79,27 @@ class Model(tf.keras.Model):
                 for val in batch_inputs[i]:
                     word = list(vocab.keys())[val]
                     tweet += word + " "
-                print("Highly polarized tweet: ", tweet)
-                print("Prediction: ", index)
-                print("Correct label: ", labels[i])
+                # print("Highly polarized tweet: ", tweet)
+                # print("Prediction: ", index)
+                # print("Correct label: ", labels[i])
+                list_tweets.append((tweet, index, labels[i]))
 
         comparison = (argmaxProbabilities == labels)
-        return np.mean(comparison)
+        return np.mean(comparison), list_tweets
 
     def loss_function(self, prbs, labels):
         """
         Calculates the model cross-entropy loss after one forward pass
 
-        :param prbs:  float tensor, word prediction probabilities [batch_size x window_size x english_vocab_size]
-        :param labels:  integer tensor, word prediction labels [batch_size x window_size]
+        :param logits:  float tensor, word prediction probabilities [batch_size x 2]
+        :param labels:  integer tensor, word prediction labels [batch_size]
         :return: the loss of the model as a tensor
         """
-        loss = tf.keras.losses.sparse_categorical_crossentropy(labels, prbs)
-        # find avg loss
-        return tf.reduce_mean(loss)
+        dem_loss = 0
+        rep_loss = 0
+        for i in range(len(prbs)):
+            if labels[i] == 1:
+                dem_loss += -tf.math.log(prbs[i][1])
+            if labels[i] == 0:
+                rep_loss += -tf.math.log(prbs[i][0])
+        return (dem_loss + rep_loss) / self.batch_size

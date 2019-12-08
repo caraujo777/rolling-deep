@@ -50,6 +50,7 @@ def test(model, test_inputs, test_labels, padding_index, vocab):
     i = 0
     total_accuracy = 0
     num_batches = 0
+    overall_list_tweets = []
     while (i < len(test_inputs)): # can use either french or english - same size!
         start = i
         i += model.batch_size
@@ -62,10 +63,10 @@ def test(model, test_inputs, test_labels, padding_index, vocab):
         batch_inputs = test_inputs[start:end] # batch of tweets
         batch_labels = test_labels[start:end] # batch of labels for the tweets
         probabilities = model.call(batch_inputs)
-        batch_accuracy = model.accuracy_function(probabilities, batch_labels, vocab, batch_inputs)
-
+        batch_accuracy, list_tweets = model.accuracy_function(probabilities, batch_labels, vocab, batch_inputs)
+        overall_list_tweets = overall_list_tweets + list_tweets
         total_accuracy += batch_accuracy
-    return total_accuracy / num_batches
+    return (total_accuracy / num_batches), overall_list_tweet
 
 def main():
     print("Running preprocessing...")
@@ -95,7 +96,8 @@ def main():
     for i in range(num_epochs):
         train(model, training_data_inputs, training_data_labels, padding_index)
 
-    acc = test(model, test_data_inputs, test_data_labels, padding_index, vocab)
+    acc, list_tweets = test(model, test_data_inputs, test_data_labels, padding_index, vocab)
+
     # Print out perplexity
     print("acc", acc)
 
