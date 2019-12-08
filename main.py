@@ -37,7 +37,7 @@ def train(model, train_inputs, train_labels, padding_index):
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
 
-def test(model, test_inputs, test_labels, padding_index):
+def test(model, test_inputs, test_labels, padding_index, vocab):
     """
     Runs through one epoch - all testing examples.
 
@@ -96,7 +96,7 @@ def main():
     for i in range(num_epochs):
         train(model, training_data_inputs, training_data_labels, padding_index)
 
-    acc = test(model, test_data_inputs, test_data_labels, padding_index)
+    acc = test(model, test_data_inputs, test_data_labels, padding_index, vocab)
     # Print out perplexity
     print("acc", acc)
 
