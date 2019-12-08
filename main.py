@@ -61,14 +61,9 @@ def test(model, test_inputs, test_labels, padding_index, vocab):
         # split up by inputs and labels
         batch_inputs = test_inputs[start:end] # batch of tweets
         batch_labels = test_labels[start:end] # batch of labels for the tweets
-
         probabilities = model.call(batch_inputs)
-        batch_accuracy = model.accuracy_function(probabilities, batch_labels)
-        if(batch_accuracy > 0.75):
-            for val in test_inputs[start:end]:
-                for i in val:
-                    print(vocab[i])
-                print('\n')
+        batch_accuracy = model.accuracy_function(probabilities, batch_labels, vocab, batch_inputs)
+
         total_accuracy += batch_accuracy
     return total_accuracy / num_batches
 
@@ -77,6 +72,10 @@ def main():
     # TODO: get data from parsed_climate.txt into right list format
     inputs, labels, vocab, padding_index = get_data('parsed_climate_inputs.txt', 'parsed_climate_labels.txt')
     print("Preprocessing complete.")
+
+
+    print("VOCAB", vocab)
+    print("osdijfhkg", list(vocab.keys())[23196])
 
     #split into training and testing data!
     percentage_training = 0.8
