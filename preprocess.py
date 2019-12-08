@@ -7,7 +7,7 @@ PAD_TOKEN = "*PAD*"
 STOP_TOKEN = "*STOP*"
 START_TOKEN = "*START*"
 UNK_TOKEN = "*UNK*"
-WINDOW_SIZE = 25
+WINDOW_SIZE = 45 #max characters in a tweet: 280; avg number of characters per word: 6; 280/6 ~= 45
 
 
 def pad_corpus(text):
