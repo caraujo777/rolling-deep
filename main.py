@@ -74,10 +74,6 @@ def main():
     inputs, labels, vocab, padding_index = get_data('parsed_climate_inputs.txt', 'parsed_climate_labels.txt')
     print("Preprocessing complete.")
 
-
-    print("VOCAB", vocab)
-    print("osdijfhkg", list(vocab.keys())[23196])
-
     #split into training and testing data!
     percentage_training = 0.8
     size_training = int(np.floor(percentage_training * len(inputs)))
