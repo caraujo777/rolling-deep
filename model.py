@@ -64,7 +64,7 @@ class Model(tf.keras.Model):
 
         return out
 
-    def accuracy_function(self, probabilities, labels):
+    def accuracy_function(self, probabilities, labels, vocab, batch_inputs):
         """
         Computes the batch accuracy
 
@@ -74,6 +74,20 @@ class Model(tf.keras.Model):
         :return: scalar tensor of accuracy of the batch between 0 and 1
         """
         argmaxProbabilities = np.argmax(probabilities, axis=1)
+
+        # code to print out highly polarized tweets!
+        for i in range(len(probabilities)):
+            index = argmaxProbabilities[i]
+            prob = probabilities[i][index]
+            if (prob > .95):
+                tweet = ""
+                for val in batch_inputs[i]:
+                    word = list(vocab.keys())[val]
+                    tweet += word + " "
+                print("Highly polarized tweet: ", tweet)
+                print("Prediction: ", index)
+                print("Correct label: ", labels[i])
+
         comparison = (argmaxProbabilities == labels)
         return np.mean(comparison)
 
