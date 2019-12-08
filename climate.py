@@ -19,7 +19,7 @@ for i in range(singular_len):
 data=[]
 correct_labels=[]
 counter = 0
-# shorten = 0
+shorten = 0
 dem = 0
 rep = 0
 with open('parsed_parties.txt') as f:
@@ -38,6 +38,8 @@ with open('parsed_parties.txt') as f:
                     rep += 1
                 if j_content['user']['party'] == 1:
                     # print("should be democratic", j_content['user']['party'])
+                    if dem > 19020:
+                        continue
                     dem += 1
 
                 counter+=1
@@ -56,18 +58,21 @@ with open('parsed_parties.txt') as f:
             text = re.sub(r'[^\w\s]',' ',text)
             text = re.sub(r'\s+', ' ', text)
             for word in words:
-                if(word in text):
+                cont = True
+                text_words = text.split()
+                for single_word in word.split():
+                    if single_word not in text_words:
+                        cont = False 
+                if cont:
+                    # print("found in text", text)
                     if j_content['user']['party'] == 0:
-                        # print("should be rep", j_content['user']['party'])
                         rep += 1
                     if j_content['user']['party'] == 1:
-                        # print("should be democratic", j_content['user']['party'])
-                        dem += 1
+                        # if dem >= 19020:
+                        #     continue
+                        dem += 1                    
                     data.append(j_content['full_text'])
                     correct_labels.append(j_content['user']['party'])
-                    # print("text")
-                    # print(word)
-                    # print('\n')
                     break
 
 print("rep, dem",rep, dem)
