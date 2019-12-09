@@ -7,7 +7,7 @@ from model import Model
 import sys
 
 
-def train(model, train_inputs, train_labels, padding_index):
+def train(model, train_inputs, train_labels):
     """
     Runs through one epoch - all training examples.
 
@@ -42,7 +42,7 @@ def train(model, train_inputs, train_labels, padding_index):
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
 
-def test(model, test_inputs, test_labels, padding_index, vocab):
+def test(model, test_inputs, test_labels, vocab):
     """
     Runs through one epoch - all testing examples.
 
@@ -56,7 +56,7 @@ def test(model, test_inputs, test_labels, padding_index, vocab):
     total_accuracy = 0
     num_batches = 0
     overall_list_tweets = []
-    while (i < len(test_inputs)): # can use either french or english - same size!
+    while (i < len(test_inputs)):
         start = i
         i += model.batch_size
         end = i
@@ -71,7 +71,7 @@ def test(model, test_inputs, test_labels, padding_index, vocab):
         batch_accuracy, list_tweets = model.accuracy_function(probabilities, batch_labels, vocab, batch_inputs)
         overall_list_tweets = overall_list_tweets + list_tweets
         total_accuracy += batch_accuracy
-    return (total_accuracy / num_batches)
+    return total_accuracy / num_batches
 
 def main():
     print("Running preprocessing...")
@@ -101,11 +101,12 @@ def main():
         test_data_inputs = shuffled_inputs[size_training:]
         test_data_labels = shuffled_labels[size_training:]
 
-        train(model, training_data_inputs, training_data_labels, padding_index)
+        train(model, training_data_inputs, training_data_labels)
 
-        acc = test(model, test_data_inputs, test_data_labels, padding_index, vocab)
+        test_acc = test(model, test_data_inputs, test_data_labels, vocab)
+        train_acc = test(model, training_data_inputs, training_data_labels, vocab)
         # Print out perplexity
-        print("at epoch", i, "acc", acc)
+        print("at epoch", i, "test acc ", test_acc, "train acc", train_acc)
 
 
 
