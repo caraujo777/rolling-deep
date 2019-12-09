@@ -76,7 +76,7 @@ def test(model, test_inputs, test_labels, vocab):
 def main():
     print("Running preprocessing...")
     # TODO: get data from parsed_climate.txt into right list format
-    inputs, labels, vocab, padding_index = get_data('parsed_climate_inputs.txt', 'parsed_climate_labels.txt')
+    inputs, labels, vocab = get_data('parsed_climate_inputs.txt', 'parsed_climate_labels.txt')
     print("Preprocessing complete.")
 
     #split into training and testing data!
@@ -102,6 +102,7 @@ def main():
         test_data_labels = shuffled_labels[size_training:]
 
         train(model, training_data_inputs, training_data_labels)
+
 
         test_acc = test(model, test_data_inputs, test_data_labels, vocab)
         train_acc = test(model, training_data_inputs, training_data_labels, vocab)

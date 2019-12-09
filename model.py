@@ -22,20 +22,6 @@ class Model(tf.keras.Model):
 
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 
-
-        # Define english and french embedding layers:
-
-        # self.embedding_layer = tf.keras.layers.Embedding(self.vocab_size, self.embedding_size)
-        # # Create positional encoder layers
-        # #self.pos_encode = transformer.Position_Encoding_Layer(self.window_size, self.embedding_size)
-        #
-        # # Define encoder and decoder layers:
-        # self.encoder = tf.keras.layers.LSTM(self.embedding_size, activation="relu")
-        #
-        # # Define dense layer(s)
-        # #self.flatten = tf.keras.layers.Flatten()
-        # self.dense_layer = tf.keras.layers.Dense(2, activation="sigmoid")
-
         self.model = tf.keras.models.Sequential()
         # self.model.add(tf.keras.layers.Embedding(self.vocab_size, self.embedding_size))
         self.model.add(tf.keras.layers.Embedding(self.vocab_size, self.embedding_size, mask_zero=True))
@@ -48,24 +34,7 @@ class Model(tf.keras.Model):
         :param input: batched ids corresponding to french sentences
         :return prbs: The 3d probabilities as a tensor, [batch_size x window_size x english_vocab_size]
         """
-
-        # 1) Add the positional embeddings to french sentence embeddings
-        # embedding = self.embedding_layer(input)
-        #
-        # # TODO: maybe to average word embedding to get sentence embedding
-        # # so dimension is embedding_size by batch_size (32 x 150)
-        #
-        # # 2) Pass the french sentence embeddings to the encoder
-        # encoded = self.encoder(embedding)
-        #
-        # #flat = self.flatten(encoded)
-        # #print(flat)
-        #
-        # # 3) Apply dense layer(s) to the decoder out to generate probabilities
-        # out = self.dense_layer(encoded)
-        # print(out)
         ugh = self.model(input)
-        # tf.print("this sucks", ugh)
 
         return ugh
 
@@ -82,18 +51,18 @@ class Model(tf.keras.Model):
 
         list_tweets = []
         # code to print out highly polarized tweets!
-        for i in range(len(probabilities)):
-            index = argmaxProbabilities[i]
-            prob = probabilities[i][index]
-            if (prob > .95):
-                tweet = ""
-                for val in batch_inputs[i]:
-                    word = list(vocab.keys())[val]
-                    tweet += word + " "
+        #for i in range(len(probabilities)):
+            #index = argmaxProbabilities[i]
+            #prob = probabilities[i][index]
+            #if (prob > .95):
+                #tweet = ""
+                #for val in batch_inputs[i]:
+                #    word = list(vocab.keys())[val]
+                #    tweet += word + " "
                 #print("\nHighly polarized tweet: ", tweet)
                 #print("Prediction: ", index)
                 #print("Correct label: ", labels[i])
-                list_tweets.append((tweet, index, labels[i]))
+                #list_tweets.append((tweet, index, labels[i]))
 
         comparison = (argmaxProbabilities == labels)
         return np.mean(comparison), list_tweets
@@ -106,12 +75,4 @@ class Model(tf.keras.Model):
         :param labels:  integer tensor, word prediction labels [batch_size]
         :return: the loss of the model as a tensor
         """
-        # dem_loss = 0
-        # rep_loss = 0
-        # for i in range(len(prbs)):
-        #     if labels[i] == 1:
-        #         dem_loss += -tf.math.log(prbs[i][1])
-        #     if labels[i] == 0:
-        #         rep_loss += -tf.math.log(prbs[i][0])
-        # return (dem_loss + rep_loss) / self.batch_size
         return tf.keras.losses.sparse_categorical_crossentropy(labels, prbs, from_logits=False)

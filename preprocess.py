@@ -10,79 +10,6 @@ UNK_TOKEN = "*UNK*"
 WINDOW_SIZE = 45 #max characters in a tweet: 280; avg number of characters per word: 6; 280/6 ~= 45
 
 
-def pad_corpus(text):
-    """
-    arguments are lists of sentences. Returns sents. The
-    text is given an initial "*STOP*".  All sentences are padded with "*STOP*" at
-    the end.
-
-    :param text: list of sentences
-    :return: list of padded sentences
-    """
-    padded_sentences = []
-    sentence_lengths = []
-    for line in text:
-        padded = line[:WINDOW_SIZE-1]
-        padded += [STOP_TOKEN] + [PAD_TOKEN] * (WINDOW_SIZE - len(padded)-1)
-        padded_sentences.append(padded)
-    return padded_sentences
-
-
-def build_vocab(sentences):
-    """
-    Builds vocab from list of sentences
-
-    :param sentences:  list of sentences, each a list of words
-    :return: tuple of (dictionary: word --> unique index, pad_token_idx)
-  """
-    tokens = []
-    for s in sentences:
-        tokens.extend(s)
-
-    all_words = sorted(list(set([STOP_TOKEN, PAD_TOKEN, UNK_TOKEN] + tokens)))
-    vocab = {word: i for i, word in enumerate(all_words)}
-
-    return vocab, vocab[PAD_TOKEN]
-
-
-def convert_to_id(vocab, sentences):
-    """
-    Convert sentences to indexed
-
-    :param vocab:  dictionary, word --> unique index
-    :param sentences:  list of lists of words, each representing padded sentence
-    :return: numpy array of integers, with each row representing the word indeces in the corresponding sentences
-  """
-    return np.stack(
-        [[vocab[word] if word in vocab else vocab[UNK_TOKEN] for word in sentence] for sentence in sentences])
-
-
-def read_data(file_name):
-    """
-    Load text data from file
-
-    :param file_name:  string, name of data file
-    :return: list of sentences, each a list of words split on whitespace
-  """
-    text = []
-    with open(file_name, 'rt', encoding='latin') as data_file:
-        for line in data_file: text.append(line.split())
-    return text
-
-
-def read_label_data(file_name):
-    """
-    Load text data from file
-
-    :param file_name:  string, name of data file
-    :return: list of sentences, each a list of words split on whitespace
-  """
-    text = []
-    with open(file_name, 'rt', encoding='latin') as data_file:
-        for line in data_file: text.append(int(line))
-    return text
-
-
 def get_data(inputs, labels):
     """
     Use the helper functions in this file to read and parse training and test data, then pad the corpus.
@@ -99,19 +26,25 @@ def get_data(inputs, labels):
     """
 
      # 1) Read data!
-    input_data = read_data(inputs)
-    label_data = read_label_data(labels)
+    x_data = []
+    y_data = []
+    with open(inputs, 'rt', encoding='latin') as data_file:
+        for line in data_file: x_data.append(line)
+    with open(labels, encoding='latin') as data_file:
+        for line in data_file: y_data.append(int(line[0]))
 
-    # 2) Pad training data (see pad_corpus)
-    padded = pad_corpus(input_data)
+    # Build Vocabulary (word id's) from titles
+    vocab = set((" ".join(x_data)).split())  # {'the', 'garden', 'hallway', 'to'..}
+    word2id = {w: i for i, w in enumerate(list(vocab))}
+    new_x_data = []
+    for line in x_data:
+        newLine = []
+        for word in line.split():
+            newLine.append(word2id[word])
+        new_x_data.append(newLine)
+    x_data = new_x_data
 
+    # pad
+    x_data = tf.keras.preprocessing.sequence.pad_sequences(x_data, padding='post')
 
-    # 4) Build vocab
-    vocab, padding_index = build_vocab(padded)
-
-
-    # 6) Convert training and testing sentences to list of IDS (see convert_to_id)
-    ids = convert_to_id(vocab, padded)
-
-    # train, test, vocab, padding_index
-    return ids, label_data, vocab, padding_index
+    return x_data, y_data, vocab
