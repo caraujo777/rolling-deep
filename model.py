@@ -20,7 +20,7 @@ class Model(tf.keras.Model):
         self.embedding_size = 128
         self.lstm_output = 200
 
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
 
         self.model = tf.keras.models.Sequential()
         # self.model.add(tf.keras.layers.Embedding(self.vocab_size, self.embedding_size))
