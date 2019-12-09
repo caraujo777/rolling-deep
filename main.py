@@ -89,11 +89,17 @@ def main():
     print("Model Initialized!")
     # Train and Test Model for 1 epoch.
     num_epochs = 20
+
+    indices = range(len(inputs))
+    shuffled_indices = tf.random.shuffle(indices)
+    shuffled_inputs = tf.gather(inputs, shuffled_indices)
+    shuffled_labels = tf.gather(labels, shuffled_indices)
+
     for i in range(num_epochs):
-        training_data_inputs = inputs[:size_training]
-        training_data_labels = labels[:size_training]
-        test_data_inputs = inputs[size_training:]
-        test_data_labels = labels[size_training:]
+        training_data_inputs = shuffled_inputs[:size_training]
+        training_data_labels = shuffled_labels[:size_training]
+        test_data_inputs = shuffled_inputs[size_training:]
+        test_data_labels = shuffled_labels[size_training:]
 
         train(model, training_data_inputs, training_data_labels, padding_index)
 
