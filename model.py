@@ -16,8 +16,9 @@ class Model(tf.keras.Model):
         # 2) Define embeddings, encoder, decoder, and feed forward layers
 
         # Define batch size and optimizer/learning rate
-        self.batch_size = 150
-        self.embedding_size = 100
+        self.batch_size = 32
+        self.embedding_size = 128
+        self.lstm_output = 200
 
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
 
@@ -35,6 +36,12 @@ class Model(tf.keras.Model):
         #self.flatten = tf.keras.layers.Flatten()
         self.dense_layer = tf.keras.layers.Dense(2, activation="sigmoid")
 
+        self.model = tf.keras.models.Sequential()
+        # self.model.add(tf.keras.layers.Embedding(self.vocab_size, self.embedding_size))
+        self.model.add(tf.keras.layers.Embedding(self.vocab_size, self.embedding_size, mask_zero=True))
+        self.model.add(tf.keras.layers.LSTM(self.lstm_output, dropout=0.2))
+        self.model.add(tf.keras.layers.Dense(2, activation='sigmoid'))
+
     @tf.function
     def call(self, input):
         """
@@ -43,22 +50,24 @@ class Model(tf.keras.Model):
         """
 
         # 1) Add the positional embeddings to french sentence embeddings
-        embedding = self.embedding_layer(input)
+        # embedding = self.embedding_layer(input)
+        #
+        # # TODO: maybe to average word embedding to get sentence embedding
+        # # so dimension is embedding_size by batch_size (32 x 150)
+        #
+        # # 2) Pass the french sentence embeddings to the encoder
+        # encoded = self.encoder(embedding)
+        #
+        # #flat = self.flatten(encoded)
+        # #print(flat)
+        #
+        # # 3) Apply dense layer(s) to the decoder out to generate probabilities
+        # out = self.dense_layer(encoded)
+        # print(out)
+        ugh = self.model(input)
+        print("this sucks", ugh)
 
-        # TODO: maybe to average word embedding to get sentence embedding
-        # so dimension is embedding_size by batch_size (32 x 150)
-
-        # 2) Pass the french sentence embeddings to the encoder
-        encoded = self.encoder(embedding)
-
-        #flat = self.flatten(encoded)
-        #print(flat)
-
-        # 3) Apply dense layer(s) to the decoder out to generate probabilities
-        out = self.dense_layer(encoded)
-        print(out)
-
-        return out
+        return ugh
 
     def accuracy_function(self, probabilities, labels, vocab, batch_inputs):
         """
@@ -97,11 +106,12 @@ class Model(tf.keras.Model):
         :param labels:  integer tensor, word prediction labels [batch_size]
         :return: the loss of the model as a tensor
         """
-        dem_loss = 0
-        rep_loss = 0
-        for i in range(len(prbs)):
-            if labels[i] == 1:
-                dem_loss += -tf.math.log(prbs[i][1])
-            if labels[i] == 0:
-                rep_loss += -tf.math.log(prbs[i][0])
-        return (dem_loss + rep_loss) / self.batch_size
+        # dem_loss = 0
+        # rep_loss = 0
+        # for i in range(len(prbs)):
+        #     if labels[i] == 1:
+        #         dem_loss += -tf.math.log(prbs[i][1])
+        #     if labels[i] == 0:
+        #         rep_loss += -tf.math.log(prbs[i][0])
+        # return (dem_loss + rep_loss) / self.batch_size
+        return tf.keras.losses.sparse_categorical_crossentropy(labels, prbs, from_logits=False)
