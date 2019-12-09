@@ -17,18 +17,23 @@ def train(model, train_inputs, train_labels, padding_index):
     :param padding_index: the padding index, the id of *PAD* token. This integer is used to mask padding labels.
     :return: None
     """
+    indices = range(len(train_inputs))
+    shuffled_indices = tf.random.shuffle(indices)
+    shuffled_inputs = tf.gather(train_inputs, shuffled_indices)
+    shuffled_labels = tf.gather(train_labels, shuffled_indices)
+
     i = 0
-    while (i < len(train_labels)):
+    while (i < len(shuffled_inputs)):
         start = i
         i += model.batch_size
         end = i
         # for when it is not divisible by batch_size to not go out of bounds
-        if i >= len(train_labels):
+        if i >= len(shuffled_labels):
             break
 
         # batch sized inputs and labels!
-        batch_inputs = train_inputs[start:end] # batch of tweets
-        batch_labels = train_labels[start:end] # batch of labels for the tweets
+        batch_inputs = shuffled_inputs[start:end] # batch of tweets
+        batch_labels = shuffled_labels[start:end] # batch of labels for the tweets
 
         with tf.GradientTape() as tape:
             logits = model.call(batch_inputs)
@@ -78,18 +83,18 @@ def main():
     percentage_training = 0.8
     size_training = int(np.floor(percentage_training * len(inputs)))
 
-    training_data_inputs = inputs[:size_training]
-    training_data_labels = labels[:size_training]
-    test_data_inputs = inputs[size_training:]
-    test_data_labels = labels[size_training:]
-
     model_args = (len(vocab), WINDOW_SIZE)
     model = Model(*model_args)
 
     print("Model Initialized!")
     # Train and Test Model for 1 epoch.
-    num_epochs = 10
+    num_epochs = 20
     for i in range(num_epochs):
+        training_data_inputs = inputs[:size_training]
+        training_data_labels = labels[:size_training]
+        test_data_inputs = inputs[size_training:]
+        test_data_labels = labels[size_training:]
+
         train(model, training_data_inputs, training_data_labels, padding_index)
 
         acc = test(model, test_data_inputs, test_data_labels, padding_index, vocab)

@@ -53,7 +53,6 @@ def convert_to_id(vocab, sentences):
     :param sentences:  list of lists of words, each representing padded sentence
     :return: numpy array of integers, with each row representing the word indeces in the corresponding sentences
   """
-    print("in convert!")
     return np.stack(
         [[vocab[word] if word in vocab else vocab[UNK_TOKEN] for word in sentence] for sentence in sentences])
 
@@ -102,7 +101,6 @@ def get_data(inputs, labels):
      # 1) Read data!
     input_data = read_data(inputs)
     label_data = read_label_data(labels)
-    print("all size", len(input_data))
 
     # 2) Pad training data (see pad_corpus)
     padded = pad_corpus(input_data)
@@ -110,8 +108,6 @@ def get_data(inputs, labels):
 
     # 4) Build vocab
     vocab, padding_index = build_vocab(padded)
-
-    print("sizes before convert", len(padded), len(vocab))
 
 
     # 6) Convert training and testing sentences to list of IDS (see convert_to_id)

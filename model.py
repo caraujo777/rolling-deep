@@ -32,7 +32,7 @@ class Model(tf.keras.Model):
         self.encoder = transformer.Transformer_Block(self.embedding_size, is_decoder=False, multi_headed=False)
 
         # Define dense layer(s)
-        # TODO: may not be supposed to use softmax on last one
+        # TODO: may not be supposed to use softmax on last one, is flatten right?
         self.flatten = tf.keras.layers.Flatten()
         self.dense_layer = tf.keras.layers.Dense(2, activation="softmax")
 
@@ -79,9 +79,9 @@ class Model(tf.keras.Model):
                 for val in batch_inputs[i]:
                     word = list(vocab.keys())[val]
                     tweet += word + " "
-                # print("Highly polarized tweet: ", tweet)
-                # print("Prediction: ", index)
-                # print("Correct label: ", labels[i])
+                #print("\nHighly polarized tweet: ", tweet)
+                #print("Prediction: ", index)
+                #print("Correct label: ", labels[i])
                 list_tweets.append((tweet, index, labels[i]))
 
         comparison = (argmaxProbabilities == labels)
