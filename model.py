@@ -17,7 +17,7 @@ class Model(tf.keras.Model):
 
         # Define batch size and optimizer/learning rate
         self.batch_size = 150
-        self.embedding_size = 32
+        self.embedding_size = 100
 
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
 
@@ -26,15 +26,14 @@ class Model(tf.keras.Model):
 
         self.embedding_layer = tf.keras.layers.Embedding(self.vocab_size, self.embedding_size)
         # Create positional encoder layers
-        self.pos_encode = transformer.Position_Encoding_Layer(self.window_size, self.embedding_size)
+        #self.pos_encode = transformer.Position_Encoding_Layer(self.window_size, self.embedding_size)
 
         # Define encoder and decoder layers:
-        self.encoder = transformer.Transformer_Block(self.embedding_size, is_decoder=False, multi_headed=False)
+        self.encoder = tf.keras.layers.LSTM(self.embedding_size, activation="relu")
 
         # Define dense layer(s)
-        # TODO: may not be supposed to use softmax on last one, is flatten right?
-        self.flatten = tf.keras.layers.Flatten()
-        self.dense_layer = tf.keras.layers.Dense(2, activation="softmax")
+        #self.flatten = tf.keras.layers.Flatten()
+        self.dense_layer = tf.keras.layers.Dense(2, activation="sigmoid")
 
     @tf.function
     def call(self, input):
@@ -49,15 +48,15 @@ class Model(tf.keras.Model):
         # TODO: maybe to average word embedding to get sentence embedding
         # so dimension is embedding_size by batch_size (32 x 150)
 
-        pos_embedding = self.pos_encode.call(embedding)
-
         # 2) Pass the french sentence embeddings to the encoder
-        encoded = self.encoder.call(pos_embedding)
+        encoded = self.encoder(embedding)
 
-        flat = self.flatten(encoded)
+        #flat = self.flatten(encoded)
+        #print(flat)
 
         # 3) Apply dense layer(s) to the decoder out to generate probabilities
-        out = self.dense_layer(flat)
+        out = self.dense_layer(encoded)
+        print(out)
 
         return out
 
