@@ -20,20 +20,21 @@ class Model(tf.keras.Model):
         self.embedding_size = 128
         self.lstm_output = 200
 
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 
 
         # Define english and french embedding layers:
 
-        self.embedding_layer = tf.keras.layers.Embedding(self.vocab_size, self.embedding_size)
-        # Create positional encoder layers
-        #self.pos_encode = transformer.Position_Encoding_Layer(self.window_size, self.embedding_size)
-
-        # Define encoder and decoder layers:
-        self.encoder = tf.keras.layers.LSTM(self.embedding_size, activation="relu")
-
-        # Define dense layer(s)
-        self.dense_layer = tf.keras.layers.Dense(2, activation="sigmoid")
+        # self.embedding_layer = tf.keras.layers.Embedding(self.vocab_size, self.embedding_size)
+        # # Create positional encoder layers
+        # #self.pos_encode = transformer.Position_Encoding_Layer(self.window_size, self.embedding_size)
+        #
+        # # Define encoder and decoder layers:
+        # self.encoder = tf.keras.layers.LSTM(self.embedding_size, activation="relu")
+        #
+        # # Define dense layer(s)
+        # #self.flatten = tf.keras.layers.Flatten()
+        # self.dense_layer = tf.keras.layers.Dense(2, activation="sigmoid")
 
         self.model = tf.keras.models.Sequential()
         # self.model.add(tf.keras.layers.Embedding(self.vocab_size, self.embedding_size))
@@ -64,7 +65,7 @@ class Model(tf.keras.Model):
         # out = self.dense_layer(encoded)
         # print(out)
         ugh = self.model(input)
-        print("this sucks", ugh)
+        # tf.print("this sucks", ugh)
 
         return ugh
 
