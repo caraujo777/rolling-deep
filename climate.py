@@ -38,7 +38,7 @@ with open('parsed_parties.txt') as f:
                     rep += 1
                 if j_content['user']['party'] == 1:
                     # print("should be democratic", j_content['user']['party'])
-                    if dem > 19020:
+                    if dem >= 7719:
                         continue
                     dem += 1
 
@@ -68,8 +68,8 @@ with open('parsed_parties.txt') as f:
                     if j_content['user']['party'] == 0:
                         rep += 1
                     if j_content['user']['party'] == 1:
-                        # if dem >= 19020:
-                        #     continue
+                        if dem >= 7719:
+                            continue
                         dem += 1                    
                     data.append(j_content['full_text'])
                     correct_labels.append(j_content['user']['party'])

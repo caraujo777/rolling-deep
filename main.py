@@ -66,7 +66,7 @@ def test(model, test_inputs, test_labels, padding_index, vocab):
         batch_accuracy, list_tweets = model.accuracy_function(probabilities, batch_labels, vocab, batch_inputs)
         overall_list_tweets = overall_list_tweets + list_tweets
         total_accuracy += batch_accuracy
-    return (total_accuracy / num_batches), overall_list_tweet
+    return (total_accuracy / num_batches)
 
 def main():
     print("Running preprocessing...")
@@ -88,7 +88,7 @@ def main():
 
     print("Model Initialized!")
     # Train and Test Model for 1 epoch.
-    num_epochs = 3
+    num_epochs = 10
     for i in range(num_epochs):
         train(model, training_data_inputs, training_data_labels, padding_index)
 
