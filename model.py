@@ -32,7 +32,6 @@ class Model(tf.keras.Model):
         self.encoder = tf.keras.layers.LSTM(self.embedding_size, activation="relu")
 
         # Define dense layer(s)
-        #self.flatten = tf.keras.layers.Flatten()
         self.dense_layer = tf.keras.layers.Dense(2, activation="sigmoid")
 
     @tf.function
@@ -51,12 +50,9 @@ class Model(tf.keras.Model):
         # 2) Pass the french sentence embeddings to the encoder
         encoded = self.encoder(embedding)
 
-        #flat = self.flatten(encoded)
-        #print(flat)
 
         # 3) Apply dense layer(s) to the decoder out to generate probabilities
         out = self.dense_layer(encoded)
-        print(out)
 
         return out
 

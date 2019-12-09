@@ -103,9 +103,10 @@ def main():
 
         train(model, training_data_inputs, training_data_labels, padding_index)
 
-        acc = test(model, test_data_inputs, test_data_labels, padding_index, vocab)
+        test_acc = test(model, test_data_inputs, test_data_labels, padding_index, vocab)
+        train_acc = test(model, test_data_inputs, test_data_labels, padding_index, vocab)
         # Print out perplexity
-        print("at epoch", i, "acc", acc)
+        print("at epoch", i, "test acc ", test_acc, "train acc", train_acc)
 
 
 
