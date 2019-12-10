@@ -12,10 +12,6 @@ for i in range(singular_len):
     hashtags.append(hashtags[i]+"s")
     words.append(words[i]+"s")
 
-# print("hashtags: ",hashtags, len(hashtags))
-# print("\n")
-# print("words: ",words, len(words))
-
 data=[]
 correct_labels=[]
 counter = 0
@@ -24,20 +20,13 @@ dem = 0
 rep = 0
 with open('parsed_parties.txt') as f:
     for line in f:
-        # if shorten > 2000:
-        #     break
-        # shorten += 1
         appended = False
         j_content = json.loads(line)
-        # print("party", j_content['user']['party'])
         for val in j_content['entities']['hashtags']:
             if(val['text'].casefold() in hashtags):
-
                 if j_content['user']['party'] == 0:
-                    # print("should be rep", j_content['user']['party'])
                     rep += 1
                 if j_content['user']['party'] == 1:
-                    # print("should be democratic", j_content['user']['party'])
                     if dem >= 7719:
                         continue
                     dem += 1
@@ -46,9 +35,6 @@ with open('parsed_parties.txt') as f:
                 data.append(j_content['full_text'])
                 correct_labels.append(j_content['user']['party'])
                 appended = True
-                # print("hashtag")
-                # print(val['text'].casefold())
-                # print('\n')
                 break
         if not appended:
             text = j_content['full_text'].casefold()
@@ -64,7 +50,6 @@ with open('parsed_parties.txt') as f:
                     if single_word not in text_words:
                         cont = False 
                 if cont:
-                    # print("found in text", text)
                     if j_content['user']['party'] == 0:
                         rep += 1
                     if j_content['user']['party'] == 1:
@@ -88,7 +73,6 @@ with open("parsed_climate_inputs.txt","w+") as file_inputs:
         text = re.sub(r'[^\w\s]',' ',text)
         text = re.sub(r'\s+', ' ', text)
         text = text.casefold()
-        # print(text)
         file_inputs.write(text)
         file_inputs.write('\n')
 file_inputs.close()
