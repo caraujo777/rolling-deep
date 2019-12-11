@@ -29,7 +29,7 @@ class Model(tf.keras.Model):
         """
         return self.model(input)
 
-    def accuracy_function(self, probabilities, labels, vocab, batch_inputs):
+    def accuracy_function(self, probabilities, labels):
         """
         Computes the batch accuracy
 
@@ -40,7 +40,7 @@ class Model(tf.keras.Model):
         """
         argmaxProbabilities = np.argmax(probabilities, axis=1)
         comparison = (argmaxProbabilities == labels)
-        return np.mean(comparison), list_tweets
+        return np.mean(comparison)
 
     def loss_function(self, prbs, labels):
         """
