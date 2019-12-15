@@ -2,16 +2,10 @@ import numpy as np
 import tensorflow as tf
 import numpy as np
 
-
-PAD_TOKEN = "*PAD*"
-STOP_TOKEN = "*STOP*"
-START_TOKEN = "*START*"
-UNK_TOKEN = "*UNK*"
-WINDOW_SIZE = 45 #max characters in a tweet: 280; avg number of characters per word: 6; 280/6 ~= 45
-
+WINDOW_SIZE = 45 # max characters in a tweet: 280; avg number of characters per word: 6; 280/6 ~= 45
 
 def get_data(inputs, labels):
-     # 1) Read data!
+     # Read data!
     x_data = []
     y_data = []
     with open(inputs, 'rt', encoding='latin') as data_file:
@@ -29,7 +23,7 @@ def get_data(inputs, labels):
         new_x_data.append(newLine)
     x_data = new_x_data
 
-    # pad
+    # pad end
     x_data = tf.keras.preprocessing.sequence.pad_sequences(x_data, padding='post')
 
     return x_data, y_data, word2id

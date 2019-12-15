@@ -1,6 +1,5 @@
 import numpy as np
 import tensorflow as tf
-import transformer_funcs as transformer
 
 class Model(tf.keras.Model):
     def __init__(self, vocab_size, window_size):
@@ -24,8 +23,8 @@ class Model(tf.keras.Model):
     @tf.function
     def call(self, input):
         """
-        :param input: batched ids corresponding to french sentences
-        :return prbs: The 3d probabilities as a tensor, [batch_size x window_size x english_vocab_size]
+        :param input: batched ids corresponding to tweets/sentences
+        :return prbs: The 3d probabilities as a tensor, [batch_size x window_size x vocab_size]
         """
         return self.model(input)
 
@@ -33,9 +32,8 @@ class Model(tf.keras.Model):
         """
         Computes the batch accuracy
 
-        :param prbs:  float tensor, word prediction probabilities [batch_size x window_size x english_vocab_size]
+        :param prbs:  float tensor, word prediction probabilities [batch_size x window_size x  vocab_size]
         :param labels:  integer tensor, word prediction labels [batch_size x window_size]
-        :param mask:  tensor that acts as a padding mask [batch_size x window_size]
         :return: scalar tensor of accuracy of the batch between 0 and 1
         """
         argmaxProbabilities = np.argmax(probabilities, axis=1)

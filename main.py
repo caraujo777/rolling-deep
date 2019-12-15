@@ -6,7 +6,13 @@ from preprocess import *
 from model import Model
 import sys
 
+"""
+Runs through one epoch - all training examples.
 
+:param model: the initilized model
+:param test_inputs:  train data inputs (ie tweets)
+:param test_labels:  train data labels (ie political party corresponding to tweets
+"""
 def train(model, train_inputs, train_labels):
     indices = range(len(train_inputs))
     shuffled_indices = tf.random.shuffle(indices)
@@ -39,7 +45,6 @@ def test(model, test_inputs, test_labels):
     :param model: the initilized model to use for forward and backward pass
     :param test_inputs:  test data inputs (ie tweets)
     :param test_labels:  test data labels (ie political party corresponding to tweets)
-    :param padding_index: the padding index, the id of *PAD* token. This integer is used to mask padding labels.
     :returns: accuracy of test set
     """
     i = 0
